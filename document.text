@@ -1,0 +1,40 @@
+\documentclass{report}
+\usepackage[utf8]{inputenc}
+
+\title{Spiking Neural Networks, classifying Dynamic Vision Sensor Data }
+\author{Georgios Alexakis,Dimitrios Korakobounis}
+\date{2021}
+\usepackage{cite}
+\begin{document}
+
+
+
+\maketitle
+
+\tableofcontents{}
+\chapter{Introduction}
+     
+\section{Thesis description}
+Machine learning, a subset of Artificial Intelligence, has exploded in recent years, owing primarily to advances in GPU hardware. Most of the concepts and algorithms used in the industry today have been around for decades, but we haven't been  able to use them to their full potential until now. To comprehend why machine learning necessitates a large amount of computing resources, we must first understand their structure and the amount of training data they need in order to be accurate enough to be used in the industry.
+\section{Spiking Neural Networks}
+Testing citation   \cite{Esser2016}
+Thesis description text
+\section{Comparison with other Neural Networks}
+
+Why Spiking Neural Networks? text
+
+\section{Neuromorphic computing}
+
+Neuromorphic computing text
+
+\chapter{Brain Inspiration}
+\section{Neurons}
+\section{Dendrites and Synapses}
+\section{Neural Representation of Information - Information Coding}
+\section{Temporal Coding of Visual Space}
+\section{Recurrence and Feedback in the Visual System}
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{library}
+\end{document}
