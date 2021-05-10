@@ -48,7 +48,37 @@ This chapter starts by defining the neuron, the most basic unit of the brain \ci
     \label{fig:neurons-multipolar}
 \end{figure}
 \section{Synapses}
-The brain is made up of a vast network of neurons. Neurons communicate with one another through synapses, which are specialized cell junctions.\cite{li2003}
+The brain is made up of a vast network of neurons. Neurons communicate with one another through synapses, which are specialized cell junctions. Synapses are required not only for neuronal signaling and computation but also for long-term changes (synaptic plasticity) that underpin information storage, such as learning and memory, in the brain  \cite{li2003}. The contact region between two communicating neurons is defined by two distinct components: the pre-synaptic terminal and the post-synaptic target site, which are separated by a synaptic cleft .
+
+Chemical and electrical synapses have been discovered in research, but the authors shall concentrate purely on electrical synapses. Electrical synapses cause a pre-synaptic impulse to be quickly converted into an electrical excitatory postsynaptic potential in the post-junctional cell. Activation of voltage-gated ion channels leads to the generation of action potentials if the current transmitted to the post-synaptic cell is sufficient to depolarize the membrane above a certain threshold \cite{Hormuzdi2004}. The amount of excitation in both cells, however, is not equal. A less depolarized paired partner can be excited by a more depolarized cell, and a more depolarized cell can be inhibited by a less depolarized cell.The synapse can also cause a rectifying behavior \cite{Furshpan1959}.Electrical synapses are very intriguing for researchers due to their unique ability of reciprocity as well as their ability to carry sub-threshold potentials allowing for synchronous activity of neurons.
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=10cm]{Neurons-Synapses/Neurites-and-Synapses-header.jpg}
+    \caption{Synapse}
+    \label{fig:synapse}
+\end{figure}
+
+It has been observed that gap junctions serve an important role in the development of the nervous system \cite{Fischbach1972}. They also produce large functional clusters of coupled neurons, which are usually organized in vertical columns spanning many cortical layers\cite{Peinado1993}\cite{Yuste1992}.
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=5cm]{Neurons-Synapses/angry-y-u-no.jpg}
+    \caption{Synapse}
+    \label{fig:spines}
+\end{figure}
+Since the authors are interested in how findings from brain research can be applied in computer vision machine learning applications it is necessary to understand how synapses aid in processing vision input in the mammalian brain. Inputs from pre-synaptic neurons are transmitted through tiny protrusions called spines on the post synaptic dendrites(see Fig.\ref{fig:spines}) \cite{tobias2017}.However, where an input is located on the dendritic tree, as well as whether it is triggered by similar stimuli to those that trigger its neighbors, matters, allowing for simultaneously active inputs \cite{London2005}.
+
+For a long time, it was unclear what information each neuron receives from various parts of the visual field, and how this information relates to the visual features encoded by the neuron's spatial receptive field until recent research has provided insight. Inputs representing similar visual features from the same location in visual space were more likely to cluster on neighbouring spines.Higher-order dendritic branches often synapse inputs from visual field regions beyond the postsynaptic neuron's receptive field. When the input's receptive field is spatially displaced along the axis of the postsynaptic neuron's receptive field direction, these putative long-range inputs are more frequent and more likely to share the postsynaptic neuron's preference for oriented edges. As a result, neurons with displaced receptive fields bind preferentially when their receptive fields are co-oriented and co-axially aligned. This synaptic connectivity organization is well suited for amplifying elongated edges and thus serves as a possible "framework" for contour integration and object grouping \cite{Iacaruso2017} and provides evidence for the idea that visual space is mapped onto the dendrites in a specific manner.
+\section{Information Representation and Processing in the Brain}
+After reviewing the functional elements of the brain, it's time to look at how information is represented in the cerebral cortex with spike trains of neuronal populations and also how can this research provide a better methodology for machine learning research.
+\subsection{Neural representation}
+A message that uses the rules and structures by which a signal carries information (neural code) to serve a function is called a representation. Its content and function make up the representation. The signal that carries a sensory input is the representation's content, while its function is the processing of the input sensory signal (cognitive process) and the cognitive process' outcome.
+
+Organisms produce an internal mirror that correctly reflects their environment \cite{Koch1994}. The input signal must then have projections that enable it to play a role in the organism's activities to adapt to its surroundings. The mechanism of transforming representations is called representation. Computation is a complement to representation. The knowledge transformations that representations serve would be impossible without computational processes. As neuronal representations are projected from one cortical area to another, they are often transformed. Neural circuits represent information as they operate, which they then transform using computational processes \cite{decharms2000}. 
+
+\subsection{Neural Code}
+How this information is exactly represented and processed in the brain is still an open question to neuroscience but several hypotheses exist. The rate-coding( average number of spikes over some time interval) hypothesis \cite{ Salzman1992} \cite{Tovee1993} contends that the information is carried by the mean firing rate, while the temporal-coding   hypothesis \cite{Bair1996} \cite{buracas1998} \cite{Rucci2018} claims that the exact timing of the spikes is what represents the information carried.
 \bibliographystyle{IEEEtran}
 \bibliography{library}
 \end{document}
