@@ -35,6 +35,9 @@ The authors intend to introduce findings from neuroscience to readers with elect
 \section{Neurons}
 This chapter starts by defining the neuron, the most basic unit of the brain \cite{gerstner2014}. These cells are responsible for processing sensory feedback from the outside world, and transforming and processing electrical signals.\cite{balduzzi2013}. Ramón y Cajal´ was the first researcher to make drawings of neurons after observing them under a microscope\cite{garcialopezp2010}
 .One example of these drawings is depicted in Figure.\ref{fig:neurons-ramoncajal} .For a better understanding of what a neuron is consisted of see Figure.\ref{fig:neurons-multipolar}.
+
+Neurons can cluster(neuronal assemblies) together in the brain and can span 1–2 mm in space and last hundreds of milliseconds. As a result, they may be able to link bottom-up, micro-scale events with top-down, macro-scale events \cite{Badin2017} .
+
 \begin{figure}[htp]
     \centering
     \includegraphics[width=4cm]{Neurons-Synapses/Ramon y Cajal.jpeg}
@@ -70,6 +73,8 @@ It has been observed that gap junctions serve an important role in the developme
 Since the authors are interested in how findings from brain research can be applied in computer vision machine learning applications it is necessary to understand how synapses aid in processing vision input in the mammalian brain. Inputs from pre-synaptic neurons are transmitted through tiny protrusions called spines on the post synaptic dendrites(see Fig.\ref{fig:spines}) \cite{tobias2017}.However, where an input is located on the dendritic tree, as well as whether it is triggered by similar stimuli to those that trigger its neighbors, matters, allowing for simultaneously active inputs \cite{London2005}.
 
 For a long time, it was unclear what information each neuron receives from various parts of the visual field, and how this information relates to the visual features encoded by the neuron's spatial receptive field until recent research has provided insight. Inputs representing similar visual features from the same location in visual space were more likely to cluster on neighbouring spines.Higher-order dendritic branches often synapse inputs from visual field regions beyond the postsynaptic neuron's receptive field. When the input's receptive field is spatially displaced along the axis of the postsynaptic neuron's receptive field direction, these putative long-range inputs are more frequent and more likely to share the postsynaptic neuron's preference for oriented edges. As a result, neurons with displaced receptive fields bind preferentially when their receptive fields are co-oriented and co-axially aligned. This synaptic connectivity organization is well suited for amplifying elongated edges and thus serves as a possible "framework" for contour integration and object grouping \cite{Iacaruso2017} and provides evidence for the idea that visual space is mapped onto the dendrites in a specific manner.
+
+
 \section{Information Representation and Processing in the Brain}
 After reviewing the functional elements of the brain, it's time to look at how information is represented in the cerebral cortex with spike trains of neuronal populations and also how can this research provide a better methodology for machine learning research.
 \subsection{Neural representation}
@@ -77,8 +82,19 @@ A message that uses the rules and structures by which a signal carries informati
 
 Organisms produce an internal mirror that correctly reflects their environment \cite{Koch1994}. The input signal must then have projections that enable it to play a role in the organism's activities to adapt to its surroundings. The mechanism of transforming representations is called representation. Computation is a complement to representation. The knowledge transformations that representations serve would be impossible without computational processes. As neuronal representations are projected from one cortical area to another, they are often transformed. Neural circuits represent information as they operate, which they then transform using computational processes \cite{decharms2000}. 
 
-\subsection{Neural Code}
-How this information is exactly represented and processed in the brain is still an open question to neuroscience but several hypotheses exist. The rate-coding( average number of spikes over some time interval) hypothesis \cite{ Salzman1992} \cite{Tovee1993} contends that the information is carried by the mean firing rate, while the temporal-coding   hypothesis \cite{Bair1996} \cite{buracas1998} \cite{Rucci2018} claims that the exact timing of the spikes is what represents the information carried.
+\subsection{Neural Coding}
+How this information is exactly represented and processed in the brain is still an open question to neuroscience but several hypotheses exist. The rate-coding( average number of spikes over some time interval) hypothesis \cite{ Salzman1992} \cite{Tovee1993} contends that the information is carried by the mean firing rate, while the temporal-coding   hypothesis \cite{Bair1996} \cite{buracas1998} \cite{Rucci2018} claims that the exact timing of the spikes is what encodes the information carried.
+The distinction between these two hypotheses is the interval used to count the spikes, meaning that in temporal coding the interval is so small that only one spike is measured. The interval for an experiment that uses rate encoding is decided upon the timescales thought to be important to a given situation, such as how rapidly the stimulus shifts, the integration time of a neural variable, the encoding process, or the relevant behavioral timescale. 
+
+
+A spike train is a complex time-varying signal consisted of multiple spikes produced by the neuron at certain times. The rate-coding hypothesis considers only one number to be important, the mean rate of these spikes. Even though encoding and decoding(the neuronal response is decoded by counting the spikes, and the stimulus is encoded by setting the firing rate proportional to the value of some stimulus parameter) are simple this hypothesis appears to be an oversimplification. In behavioral experiments, response times are often too short to allow for slow temporal averaging \cite{thorpe1996}. In another experiment on a visual neuron of a fly, the time dependent stimulus was successfully reconstructed from neuron firing times \cite{Bialek1991}. There is also evidence of precise temporal correlations between pulses of different neurons \cite{Lestienne1996} .
+
+\subsection{Oscillations}
+Oscillations occurring at different frequencies are considered as functionally relevant signals of the brain and research supports that event-related oscillations bridge the gap between single neurons and neural assemblies \cite{Basar2000}. Research also hypothesizes that selectively  distributed delta, theta,alpha, and gamma oscillatory systems act as resonant communication networks through large populations of neurons. They reflect the temporal synchronization of neuronal populations' behavior and have been implicated as a mechanism that selects subsets of neurons for further joint processing and eventual stimulus representation because they can display task or stimulus dependence \cite{Singer1995} \cite{Singer1999}.
+
+
+
+
 \bibliographystyle{IEEEtran}
 \bibliography{library}
 \end{document}
