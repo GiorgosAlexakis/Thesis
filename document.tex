@@ -1,11 +1,18 @@
-\documentclass{report}
+\documentclass[12pt]{report}
 \usepackage[utf8]{inputenc}
+\usepackage[font=medium]{caption}
+\usepackage{amsmath}
+\usepackage{extsizes}
+\usepackage[export]{adjustbox}
+
 
 \title{Spiking Neural Networks, classifying Dynamic Vision Sensor Data }
 \author{Georgios Alexakis,Dimitrios Korakobounis}
 \date{2021}
 \usepackage{cite}
 \usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{wrapfig}
 \graphicspath{{Images/}}
 \begin{document}
 
@@ -28,11 +35,29 @@ For the reasons mentioned above, as well as the method by which we collect video
 
 For the time being, these sensors are quite expensive, but thankfully, several DVS datasets have been recorded for researchers like us who want to test and develop spiking neural network machine learning algorithms in data obtained by these types of sensors.
 
-The authors intend to introduce findings from neuroscience to readers with electrical and computer engineering backgrounds to inspire them to delve deeper into what the brain has to educate them and how this could lead to new and more sophisticated AI and why this is necessary considering the immense energy consumption of current methods. The authors first inform   the readers first about the energy requirements of today's neural networks. Then they compare the hardware that employs simple spiking neural networks,neuromorphics, with Von-Neumann computer architecture . The dissertation goes on to describe neuroscience research in great depth. The authors attempt to describe findings from neurons,synapses, dendrites, and how these form larger structures, then continue to information encoding, temporal coding of visual information, and how a brain vision system is interconnected to parts of the brain involved in learning and memory.The authors next explain methods to simulate neuron models and what learning algorithms can be used to test their efficiency and performance with software libraries based on existing machine learning libraries such as PyTorch and TensorFlow, taking into account the need to implement these findings in the industry. The authors present their experiments on Dynamic Vision Sensor Datasets in the final section.
-\section{Energy requirements of current Machine Learning Models}
-\section{Neuromorphics}
+We intend to introduce findings from neuroscience to readers with electrical and computer engineering backgrounds to inspire them to delve deeper into what the brain has to educate them and how this could lead to new and more sophisticated AI and why this is necessary considering the immense energy consumption of current methods. We first inform the readers about the energy requirements of today's neural networks. The dissertation goes on to describe neuroscience research in a simple manner. We attempt to describe findings from neurons,synapses, dendrites, and how these form larger structures, then continue to information encoding, temporal coding of visual information, and how a brain vision system is interconnected .Then we compare the hardware that employs simple spiking neural networks,neuromorphics, with Von-Neumann computer architecture. The authors next explain methods and the equations that are used to simulate neuron models and what learning algorithms can be used to test their efficiency and performance with software libraries based on existing machine learning libraries such as PyTorch and TensorFlow, taking into account the need to implement these findings in the industry. In the final section we present our experiments on Dynamic Vision Sensor Datasets and explain the results thoroughly.
+\section{Current Machine Learning issues}
+The massive computational resources required to train Deep Neural Network models use a great deal of electricity. Training normally lasts a few days, if not weeks. As a result, due to the cost of hardware, electricity, or cloud computing time, these models are both financially and environmentally costly to train and build, leaving a high carbon imprint. In addition, training is still slow in comparison to what the human brain is capable of. Researchers calculated the energy consumption to train a large NLP model and made comparisons in a study \cite{Strubell2019}. One language model requires more than half a million pounds of CO\textsubscript{2}, which is nearly 5 times the amount of CO\textsubscript{2} a car requires over its lifetime (see Fig \ref{fig:energy-requirements}). The time it takes to train BERT on a GPU is about the same as a trans-American flight. A human, on the other hand, produces roughly 11.000 lbs of CO\textsubscript{2} every year. Researchers should emphasize designing efficient models and hardware in light of these realities.
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=8cm]{Introduction/energy-requirements.PNG}
+    \caption{}
+    \label{fig:energy-requirements}
+\end{figure}
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=14cm]{Introduction/costs.PNG}
+    \caption{}
+    \label{fig:costs}
+\end{figure}
+
+Transferring an existing model to a new task or creating new models from scratch will demand additional resources. The cloud computation cost for some of the most accurate language models as well as training times are shown in Fig \ref{fig:costs}. Another issue is that most of the models discussed in this study \cite{Strubell2019} were created outside of academia; recent advances in state-of-the-art accuracy have been made possible thanks to commercial access to large-scale computation.Due to the high cost of training though, computing resources are not accessible to all University students, preventing poorer nations from developing their own Deep Neural Network models.
+
 \chapter{Brain Inspiration}
-\section{Neurons}
+The scale of the mammalian brain is immense. Each human brain comprising of about 25 thousand neurons and  10x10\textsuperscript{8} synapses per cubic centimeter \cite{nguyen2013} in the neocortex.The neocortex is the outer layer of the brain. It is estimated at 20 years of age, the neocortex in total, contains about 25x10\textsuperscript{9} neurons and almost 180 trillion synapses! We will explore some findings from brain research and see how these can help us develop more efficient machine learning methods.
+\section{Brain Structural Elements}
+\subsection{Neurons}
 This chapter starts by defining the neuron, the most basic unit of the brain \cite{gerstner2014}. These cells are responsible for processing sensory feedback from the outside world, and transforming and processing electrical signals.\cite{balduzzi2013}. Ramón y Cajal´ was the first researcher to make drawings of neurons after observing them under a microscope\cite{garcialopezp2010}
 .One example of these drawings is depicted in Figure.\ref{fig:neurons-ramoncajal} .For a better understanding of what a neuron is consisted of see Figure.\ref{fig:neurons-multipolar}.
 
@@ -50,7 +75,7 @@ Neurons can cluster(neuronal assemblies) together in the brain and can span 1–
     \caption{Neuron illustration.The dendrites,axons and synaptic terminals are of interest.}
     \label{fig:neurons-multipolar}
 \end{figure}
-\section{Synapses}
+\subsection{Synapses}
 The brain is made up of a vast network of neurons. Neurons communicate with one another through synapses, which are specialized cell junctions. Synapses are required not only for neuronal signaling and computation but also for long-term changes (synaptic plasticity) that underpin information storage, such as learning and memory, in the brain  \cite{li2003}. The contact region between two communicating neurons is defined by two distinct components: the pre-synaptic terminal and the post-synaptic target site, which are separated by a synaptic cleft .
 
 Chemical and electrical synapses have been discovered in research, but the authors shall concentrate purely on electrical synapses. Electrical synapses cause a pre-synaptic impulse to be quickly converted into an electrical excitatory postsynaptic potential in the post-junctional cell. Activation of voltage-gated ion channels leads to the generation of action potentials if the current transmitted to the post-synaptic cell is sufficient to depolarize the membrane above a certain threshold \cite{Hormuzdi2004}. The amount of excitation in both cells, however, is not equal. A less depolarized paired partner can be excited by a more depolarized cell, and a more depolarized cell can be inhibited by a less depolarized cell.The synapse can also cause a rectifying behavior \cite{Furshpan1959}.Electrical synapses are very intriguing for researchers due to their unique ability of reciprocity as well as their ability to carry sub-threshold potentials allowing for synchronous activity of neurons.
@@ -83,18 +108,843 @@ A message that uses the rules and structures by which a signal carries informati
 Organisms produce an internal mirror that correctly reflects their environment \cite{Koch1994}. The input signal must then have projections that enable it to play a role in the organism's activities to adapt to its surroundings. The mechanism of transforming representations is called representation. Computation is a complement to representation. The knowledge transformations that representations serve would be impossible without computational processes. As neuronal representations are projected from one cortical area to another, they are often transformed. Neural circuits represent information as they operate, which they then transform using computational processes \cite{decharms2000}. 
 
 \subsection{Neural Coding}
-How this information is exactly represented and processed in the brain is still an open question to neuroscience but several hypotheses exist. The rate-coding( average number of spikes over some time interval) hypothesis \cite{ Salzman1992} \cite{Tovee1993} contends that the information is carried by the mean firing rate, while the temporal-coding   hypothesis \cite{Bair1996} \cite{buracas1998} \cite{Rucci2018} claims that the exact timing of the spikes is what encodes the information carried.
+How information is exactly represented and processed in the brain is still an open question to neuroscience but several hypotheses exist. The rate-coding( average number of spikes over some time interval) hypothesis \cite{ Salzman1992} \cite{Tovee1993} contends that the information is carried by the mean firing rate, while the temporal-coding   hypothesis \cite{Bair1996} \cite{buracas1998} \cite{Rucci2018} claims that the exact timing of the spikes is what encodes the information carried.
 The distinction between these two hypotheses is the interval used to count the spikes, meaning that in temporal coding the interval is so small that only one spike is measured. The interval for an experiment that uses rate encoding is decided upon the timescales thought to be important to a given situation, such as how rapidly the stimulus shifts, the integration time of a neural variable, the encoding process, or the relevant behavioral timescale. 
 
 
 A spike train is a complex time-varying signal consisted of multiple spikes produced by the neuron at certain times. The rate-coding hypothesis considers only one number to be important, the mean rate of these spikes. Even though encoding and decoding(the neuronal response is decoded by counting the spikes, and the stimulus is encoded by setting the firing rate proportional to the value of some stimulus parameter) are simple this hypothesis appears to be an oversimplification. In behavioral experiments, response times are often too short to allow for slow temporal averaging \cite{thorpe1996}. In another experiment on a visual neuron of a fly, the time dependent stimulus was successfully reconstructed from neuron firing times \cite{Bialek1991}. There is also evidence of precise temporal correlations between pulses of different neurons \cite{Lestienne1996} .
+\subsubsection{Neuron Assemblies}
+Yoshio Sakurai in his research \cite{sakurai1999} states that single neurons are inadequate as a basic coding mechanism. As we mentioned earlier the brain contains an uncountable number of synapses, that means that each neuron receives signals from thousands other neurons. This make a single neuron to have an unstable firing behavior as their membrane potential undergoes large fluctuations. 
 
+Additionally, individual single neurons have only quite minimal influence on other neurons and cannot produce a strong enough transmission to trigger spikes in the next neurons when it comes to functional transmissions between neurons. According to theoretical arguments, the brain's number of neurons is insufficient to capture the enormous amount of data that an animal processes over its lifetime. Because combinations and configurations of items produce new items, there is a combinatorial explosion, the number of information items is nearly limitless. Single-neuron representation of such items is also inconvenient for associating and discriminating among information items, indicating the degree of similarity or difference among items, or creating new concepts and ideas from disparate pieces of data. Thus, the single neuron hypothesis seems like unlikely to explain the brain's coding and processing. The ensemble activity of a population of neurons seems more capable of encoding information in the brain. This hypothesis is called ensemble coding.
+
+To give you a more exact definition: A set of neurons forms a functional group if the impulses...are coordinated, to the extent that their temporal relationships are arranged, at least probabilistically, in characteristic patterns is what how an older research paper defines a neuron assembly \cite{gerstein1978} . A neuron does not have to engage in just one functional groups; it can be part of multiple neuronal assemblies at different times. Furthermore, the neurons that make up a functional group do not need to be in direct synaptic contact or in close proximity anatomically. Neuronal assemblies can also form when neurons share extrinsic input activity. Because we'll be focusing on visual processing in this dissertation, let's examine at how neuronal assemblies can play a role in the various stages of visual processing.
+
+Certain processes that take place during a period of postnatal development result in the selective stabilization of connections between neuronal components that often have linked activity, allowing connectivity to be modified based on functional parameters \cite{singer1998}. In the input stage of the striate cortex neuronal assemblies can contribute to optimize the match between the representations of the two eyes. It also helps to construct neuronal representations for frequently recurring feature configurations at a later level of processing by participating in the formation of selective connections between cortical columns (see also section 2.1.2 about cortical columns).
+
+The enhanced correlated activity can occur from selective enhancement in synaptic connections among neurons.Such selective enhancement refers to the temporary dynamics of that is sustained during a neural activity, rather than a permanent change in synaptic efficacy between neurons. As a result, the above-mentioned event- and behavior-related dynamic modulation of correlated firing in neurons supports the idea that neurons can rapidly associate into a functional group in order to process the required information while remaining dissociated from concurrently activated competing groups. Finally, let us examine important properties of Ensemble coding :
+\begin{enumerate}
+    \item Overlapping set coding of information items. The same neuron is a part of many different assemblies.
+    \item Sparse coding of information items. Any individual cell assembly contains a small subset of all of the neurons in the cortex. This property makes it interesting for machine learning researchers that want to look into more efficient sparse computations.
+    \item Dynamic construction and reconstruction. Cell assemblies are temporal sets of neurons interconnected by flexible functional synapses. This enables very flexible behavior something that is almost not existent in current machine learning methods.
+    \item Dynamic persistence . Activation of a cell assembly will persist for a time via feedback due to the excitatory synapses among the neurons.
+    \item Dynamic completion. Activation of a large enough subset of a cell assembly results in activation of the complete cell assembly.
+\end{enumerate}
+The neural ensemble coding hypothesis is an exciting one since it can be confirmed by many research studies in the human brain.Functional overlapping of individual neurons and correlation dynamics among multiple neurons were found in working memory and reference memory.
+Cell assemblies are composed of task-related single neurons—a possibility for dual coding by cell assemblies and their single neuron. The experimental data for these experiments can be found in citings of \cite{sakurai1999}. Understanding the meaningful results behind these results might enable for more efficient and more brain like machine learning methods.  
+\begin{figure}[htp]
+    \includegraphics[width=10cm,right]{Brain Inspiration/neuron assemblies/assemblies.PNG}
+    \caption{Visualization of some neuron assembly properties.}
+    \label{fig:assemblies}
+\end{figure}
 \subsection{Oscillations}
 Oscillations occurring at different frequencies are considered as functionally relevant signals of the brain and research supports that event-related oscillations bridge the gap between single neurons and neural assemblies \cite{Basar2000}. Research also hypothesizes that selectively  distributed delta, theta,alpha, and gamma oscillatory systems act as resonant communication networks through large populations of neurons. They reflect the temporal synchronization of neuronal populations' behavior and have been implicated as a mechanism that selects subsets of neurons for further joint processing and eventual stimulus representation because they can display task or stimulus dependence \cite{Singer1995} \cite{Singer1999}.
 
+\section{Neural Plasticity}
+Synaptic plasticity is a process that modifies the connectivity of neurons influenced by the amount of excitation between them (Section 2.2 to see how the synapse allows this). The neuroscientist  Shatz described this as "cells that fire together, wire together" \cite{shatz1992}.More notably, if one of the cells is active systematically just slightly before the other, the first one's firing may have a causal relationship to the second one's firing, which can be later recalled by strengthening the wiring of connections, this is how neuroscientists define synaptic plasticity. Timing is important since it can reveal causality and also might serve as a temporal coding scheme on a millisecond time scale .
+
+Long into the mid-1990s, Hebb's notion that coincident activity in linked neurons is what matters in plasticity dominated neuroscience research . It was realized that brain synaptic connections have mechanisms in place that should have made them especially sensitive to timing and it was confirmed in numerous studies \cite{markram1995}\cite{markram1997}\cite{Gerstner1996}, neuroscientists called this improved version of Hebbian Learning Spike Time Dependent Plasticity(STDP) .By potentiating those inputs that predicted the own spiking activity, a neuron contained in a neural network can select which neighboring neurons are worth listening to with STDP. The neuron in issue, on the other hand, pays less attention to surrounding neurons that fail to do so. As a result, the sample neuron can integrate inputs with predictive strength and translate them into a meaningful predictive output, even if the meaning isn't completely understood by the neuron. As a result, STDP provides a very basic and elegant mechanism for properly connecting neurons in the brain \cite{Markram2012} .
+
+
+\chapter{Neuromorphics}
+Moore's Law, which predicted exponential growth in the number of transistors that could be made on a single microchip, has guided advances in microchip technology. The exponential time constant is short—it doubles every 18 months. Moore's Law has been implemented primarily through the reduction of transistor size, and as CMOS transistors become smaller, they become cheaper, faster, and more energy-efficient.
+Neuromorphic computing encompasses a wide range of information processing techniques, all of which are distinct from mainstream conventional computer systems by some degree of neurobiological inspiration. The theory underpinning neuromorphic computing can be traced back to Carver Mead's foundational work at Caltech in the late 1980s. This early work inspired others to continue developing neuromorphic devices, and the aforementioned breakthroughs in VLSI technology aided constant expansion in the size and functionality of neuromorphic devices \cite{furber2016}.
+
+Current general-purpose computers' digital designs provide the noise immunity and predictable behavior that the determinism Turing machine is known for.Biology foregoes determinism in favor of efficiency, which could be of interest to future computer engineers working on systems like robot vision systems, where absolute accuracy is impossible to achieve and energy efficiency is a top priority .Neuromorphic computing aims in some limited way to extract or mimic  the complexity of the human brain and its principles of operation to more abstract methods that can be applied in a computing system of this type. Neuromorphics systems adhere to the principle of distributed computing, in other words having a large amount of small computing "cores" analogous to neurons connected into networks with some degree of allowed connectivity flexibility. 
+
+In recent years, a number of large-scale neuromorphic systems have emerged, utilizing the massive transistor resource now available on a single microchip and, in one case, an entire silicon wafer. The technology's capabilities combine with scalable architectures to allow neuromorphic capabilities to scale up to support neural networks with millions of neurons and billions of synapses.Modelers can now consider developing models of the entire brains of creatures ranging from insects to tiny mammals, or major sub-areas of the human brain. The same systems also provide platforms capable of supporting new scales of cognitive architecture. Some of the most notable examples are the following.
+\subsubsection{IBM TrueNorth}
+The IBM TrueNorth chip is based upon distributed digital neural models aimed at real-time cognitive applications.The chip is a very large, 5.4 million transistor 28 nm CMOS chip that incorporates 4096 neurosynaptic cores where each core comprises 256 neurons each with 256 synaptic inputs  .The cross-bar outputs couple into the digital neuron model, which implements a form of integrate-and-fire algorithm with 23 configurable parameters that can be adjusted to yield a variety of different behaviors, and digital pseudo-random sources are used to generate stochastic behavior by modulating synaptic connections, neuron threshold, and neuron leakage \cite{cassidy2013}.The outputs of each core's neuron spike events follow individually-configurable point-to-point paths to the input of another core, which can be on the same or a different TrueNorth chip.When a neuron's output must link to two or more neurosynaptic cores, the neuron is duplicated within the same core (see Fig \ref{fig:truenorth}). The digital model's deterministic nature ensures that all replicants produce identical spike trains \cite{furber2016}.
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=18cm]{Neuromorphics/truenorth.PNG}
+    \caption{TrueNorth communications are built on point-to-point links that carry spikes from a single neuron to a single neurosynaptic core, where the spikes can connect to any or all of the core's 256 neurons. For example here,Core 1's leftmost neuron links to core 3 . Core 1's 2nd and 3rd neurons duplicate each other to link to cores 2 and 3, and each makes one connection.}
+    \label{fig:truenorth}
+\end{figure}
+
+\subsubsection{SpiNNaker}
+The SpiNNaker project \cite{furber2014} has developed a massively parallel digital computer whose communication infrastructure is inspired by the goal of modeling large-scale spiking neural networks in biological real time with connections similar to a brain's. The largest SpiNNaker system currently in use has 1 000 000 cores. However, spiNNaker is unlike other neuromorphic systems . It uses small integer cores (custom chips) intended for mobile embedded applications .
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=14cm]{Neuromorphics/spinnaker.PNG}
+    \caption{SpiNNaker systems on a small scale. The 4-node (72-core) system (left) is powered by a USB connector and is ideal for learning and small tasks, such as robots. The 48-node (864-core) system (right) is the basic building block of the larger computers and can be employed for larger applications.}
+    \label{fig:spinnaker}
+\end{figure}
+
+SpiNNaker's communications fabric is designed for sending large amount of small data packets(i.e. neuron spikes) to many destinations according to statically configured multicast paths \cite{plana2011}.
+The design of SpiNNaker is based around a small plastic 300 bga (ball grid array) package which incorporates a custom processing chip  and a standard 128 Mbyte SDRAM memory chip. The processing chip, designed on a 130 nm CMOS technology, contains 18 ARM968 processor cores, each with 32 Kbytes of instruction memory and 64 Kbytes of data memory, a multicast packet router, and sundry support components \cite{painkras2013} \cite{furber2016}.
+
+Each neuron in a common ANN, such as DNNs and CNNs, can be represented as a number that is calculated when the neuron is given an input matrix. An SNN's spiking neuron is, once again, an arithmetic value calculated when input spikes come in a time window. We don't have a synchronous input and, as a result, a synchronous output in this case. In most circumstances (models), the neuron's output is a spike of potential to the following layer of neurons. This spike occurs when particular criteria in the neuron are met, and it is the primary cause of the wide range of neuron models.
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=18cm]{Neuromorphics/overview.PNG}
+    \caption{Overview of neuromorphic chips and a comparison with the human brain.We still have a long way to go to reach the human brain.}
+    \label{fig:overview}
+\end{figure}
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=18cm]{Neuromorphics/photonics.PNG}
+    \caption{Comparison of neuromorphic hardware platforms . The superiority of neuromorphic computing systems in terms of efficiency is apparent.Future photonic neuromorphic systems might offer substantially better performance but photonics fall out of the subject of this thesis.\cite{shastri2018}}
+    \label{fig:overview}
+\end{figure}
+
+\chapter{Spiking Neural Networks}
+In this chapter, we will shift our attention from the biological brain to the artificial one. Spiking Neural Networks differ from the common Artificial Neural Networks that have been developed throughout the last century, as stated before, mainly in the temporal dimension of the input data. This difference creates the need for the development of neuron models such that they can decode and extract information from the temporal data. Moreover, most of the datasets for training and testing ANNs that currently exist, consist of non-temporal data. Such datasets can't be given as input in an asynchronous model as a SNN. To overcome this problem, many algorithms of conversion have been developed, some of them will be presented in this chapter.
+\section{Neuron Models}
+\subsection{The Hodgkin - Huxley model}
+In 1952, Hodgkin and Huxley published 4 papers regarding how the neurons work\cite{Johnson2017}. They performed experiments on a giant axon of a squid and developed the following model. Through their tests, they found that the ionic movement from tree ions, Sodium (Na\textsuperscript{+}), Potassium (K\textsuperscript{+}) and a leak current mainly consisting of Chlorine ions (Cl\textsuperscript{-}), controlled by two voltage-dependent channels (Sodium and Potassium channels) are responsible for the current flow of the neuron. While the neuron is at rest, inside the neuron, a high concentration of negatively charged ions creates a voltage difference with the exterior of the neuron, which is positively charged. When the voltage reaches a certain threshold, Sodium and Potassium pumps open, moving ions in and out of the cell respectively. This ionic movement results in a current that moves as a spike through the axon to the next neuron.
+
+The Hodgkin-Huxley model is represented as an electrical circuit shown in figure 3.1. The voltage denoted as V\textsubscript{m} represents the voltage across the cell membrane. We can see that an input current I\textsubscript{m} can charge the capacitor C\textsubscript{m} or it can leak through the rest of the channels. The potential of each of the ions is different so it is used one different battery for each one of the ions. It is worth noting that the Sodium battery E\textsubscript{Na\textsuperscript{+}} is oriented in reverse compared to the rest of the ion batteries and this is justified as the Sodium ions move out of the membrane. The arrows in the resistors of the Sodium and Potassium channel denote that these resistors are though as non static values and describe the pumps of the biological model.
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=8cm]{Neurons-Synapses/HH model circuit.png}
+    \caption{The Hodgkin-Huxley model represented as an electrical circuit.}
+    \label{fig:neurons-multipolar}
+\end{figure}
+
+In order to analyze the circuit, the static values of the Chlorine channel and the leak channel can be calculated with Kirchhoff's law as one channel, named Leak channel, with a steady valued battery and resistance. Applying the Kirchhoff's current law in the circuit we get the following equation: \[I(t) = \sum_{k}I_k\]
+Replacing each current equation with its voltage equivalent, arises a first order differential equation due to the capacitor C\textsubscript{m}. For each of the Sodium, Potassium and Leak channels, the corresponding conductance has to be evaluated. Hodgkin and Huxley found that two types of pumps are responsible for the movement of Sodium ions and one pump type for the Potassium. For this reason, they added the parameters m, h and n to describe the control of the pumps in the ion movement. Through numerical experiments they arrived at the following result describing the potential of the cell membrane
+
+\begin{equation}
+C_m\frac{dV_m}{dt} = I_m - (g_{Na^+}m^3h(V_m+E_{Na^+}) + g_{K^+}n^4(V_m-E_{K^+}) + g_L(V_m-E_L))
+\end{equation}
+
+
+where the values m, h and n are voltage dependent and are described by the following differential equations:
+\begin{equation}
+\frac{dm}{dt}=\alpha_m(V_m)(1-m)+\beta_m(V_m)m
+\end{equation}
+\begin{equation}
+\frac{dh}{dt}=\alpha_h(V_m)(1-h)+\beta_h(V_m)h
+\end{equation}
+\begin{equation}
+\frac{dn}{dt}=\alpha_n(V_m)(1-n)+\beta_n(V_m)n
+\end{equation}
+The \(\alpha_m(V_m)\), \(\alpha_h(V_m)\), \(\alpha_n(V_m)\), \(\beta_m(V_m)\), \(\beta_h(V_m)\), \(\beta_n(V_m)\) are voltage dependent functions that define the behavior of the m, h and n variable and, in total, the cell membrane potential. Solving each equation, we get an exponential solution with an exponent constant \(\tau_m\), \(\tau_h\) and \(\tau_n\) respectively. In figures 3.2a and 3.2b is shown the membrane voltage that occurs through the above set of equations and the values of the time constants as a function of potential. This difference indicates the existence of fast and slow ion gates.
+
+\begin{figure}[htp]
+    \centering
+    \subfloat[Hodgkin-Huxley model membrane's voltage trajectory]
+    {\includegraphics[width=5cm]{Neurons-Synapses/HodgkinHuxley_output.png}\label{fig:f1}}
+    \hfill
+    \subfloat[time constants as a function of potential]
+    {\includegraphics[width=5cm]{Neurons-Synapses/time-constants-Hodgkin-Huxley-model.png}\label{fig:f2}}
+    \caption{fig:Hodgkin-Huxley model dependencies}
+\end{figure}
+
+Given exact values at the voltage-dependent variables of them, n and h functions, we can simulate the voltage of the cell membrane and study its behavior. In their work \cite{NelsonM} Nelson M. and Rinzel J. used a GENESIS tutorial squid \cite{squid} to generate multiple forms of a spike. The Hodgkin Huxley model has been developed since 1952 to adapt to the findings of the behavior of neurons and this book \cite{gerstner2014} presents extended information about the biological model of the neuron and the mathematical adaptation of the Hodgkin Huxley model.
+
+The Hodgkin Huxley model pioneered the field of neuronal dynamics in the aspect of neuroscience but it also initiated the research and development of Spiking Neural Networks. From an engineering perspective, there have been many successful attempts to implement a neuron using the aforementioned model in hardware with FPGA as in \cite{Levi2018} which results in a possible communication between electrical signals from a living organism to an artificial structure and, with a development of a SNN, cooperation between them. There have also been developed multilayered Spiking Neural Networks with the Hodgkin Huxley model of the neurons and been trained for tasks like edge detection and pattern classification as shown in this \cite{Yedjour2017} and this \cite{pattern2016} research work respectively with promising results.
+
+Despite its innovative description of a neuron, the model has been criticized for its efficiency in describing the complex behavior of the many different types of neurons. These criticisms arise from weaknesses of the model such as its inability to account for events that can affect the neuron's state\cite{limit1993}. From engineering perspective, its main drawback for the development of complex SNNs is its high computational complexity. It has been proven \cite{reduction1997} that the Hodgkin Huxley model can be described, with sufficient accuracy, as a single-variable threshold model. Engineers shifted their attention to developing simpler threshold models so as to be able to create more complex structures which led to the development of neuron models such as the ones that follow.
+
+\medskip
+
+\subsection{Leaky Integrate-and-Fire Model: LIF}
+
+The LIF model was first proposed in 1907 \cite{Brunel2007} and presents the neuron as a leaky integrating unit. The LIF model, in contrast with the HH, is a threshold model, that is, it emits an output spike when the input voltage reaches a predefined threshold. The equivalent electrical circuit of the model is a RC circuit with an input current I\textsubscript{inject}. The input currents are typically spikes (\(\delta\)-Dirac like functions) that, due to the capacitor C, increase the voltage of the unit by the same value. The resistor, or as shown in Figure 3.3 the conductor g\textsubscript{leak}, is responsible for the neuron's voltage leakage, while the source E\textsubscript{m} accounts for the neuron's voltage in idle state. When the threshold is reach, the unit emits a spike and the voltage returns to the initial(idle) state.
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=8cm]{Neurons-Synapses/Simplied-circuit-of-the-LIF-neuron-model.png}
+    \caption{The Leaky Integrate-and-Fire model as an electrical circuit}
+    \label{fig:lif-circuit}
+\end{figure}
+
+\vspace{5mm}
+
+Analyzing the circuit the following equation is derived, describing the potential of the unit through time. The solution of the homogeneous equation (i\textsubscript{inject}=0) is an exponential decay. The constant \(\tau\textsubscript{m}=C/g\textsubscript{leak}\) is the time constant of the exponential decay and is determined by the aforementioned factors, the conductor and the capacitor of the circuit. Figure 3.4 shows the response of the model in a spike train input.
+
+\vspace{5mm}
+
+\begin{equation}
+\tau\textsubscript{m}\frac{dV\textsubscript{m}(t)}{dt}=-(V\textsubscript{m}-E\textsubscript{m})+\frac{i\textsubscript{inject}}{g\textsubscript{leak}}
+\end{equation}
+
+\vspace{5mm}
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{Neurons-Synapses/The-illustration-of-Leaky-Integrate-and-Fire-LIF-neuron-dynamics-The-pre-spikes-are.png}
+    \caption{Voltage of neuron's potential and its response. Each of the input signal is multiplied by its weight and then summed to act on the neuron's potential. When the neuron's membrane potential reaches the threshold, it produces a spike and the voltage is reset to its idle state.}
+    \label{fig:lif-neuron}
+\end{figure}
+
+\medskip
+
+The simplicity of the model has drawn the attention of researchers both for software and hardware implementation of the neuron. It has been used for a wide variety of usages. In 2003 the leaky integrate-and-fire model was used to model the cochlea and detect sound features\cite{sound2003}, while more common, for ANNs, tasks, such as pattern recognition and image segmentation, have been tackled using either single LIF model neurons (for pattern recognition)\cite{pattern2007} or SNNs that consists of such neuron models (image segmentation)\cite{Chaturvedi2012}. Doutsi E. et al. in their work\cite{Doutsi2021} used the LIF model to transform the input signal to spike trains. This extended research over this model led researchers to view the model itself as a subject for study and much work has been done in improving the model itself, like in\cite{Mullowney2008}. From the point of view of the hardware implementation, SNNs based on the model mentioned above have already been proposed or developed and trained for various purposes such as\cite{Liu2019} and \cite{Chu2015}, exploiting the advantages of SNNs. The increasing research development of electronic components, like memristors, that favor the development of such networks\cite{Yang2020}, has created a explode in the creation of neuromorphic, and even photonic architectures\cite{Nahmias2013}, that promise low power consumption\cite{Liu2019},\cite{Chatterjee2019}, and high compacted architectures\cite{Rozenberg2019} for developing LIF model-based SNNs. 
+
+The drawback of the model emanates from its simplicity. It has been proposed that, compared to the HH model, the LIF model could be less tolerant to noise while resembles less the biological neuron\cite{subthreshold2005}. Furthermore, compared to the results of the state-of-the-art ANNs and machine learning algorithms, SNNs do not always present satisfactory results, such as in this study\cite{SVM2014} where a Leaky Integrate-and-Fire SNN model is compared with an SVM.
+
+\medskip
+
+\subsection{Izhikevich Model}
+
+In 2003 Eugene M. Izhikevich published an article proposing a new model of neurons\cite{Izhikevich2003}. The goal was to provide a model with mathematical simplicity and biological plausibility, combining features from the Leaky Integrate-and-Fire model and the Hodgkin-Huxley model. The resulting model would be useful to model biological neurons while could be easily implemented, from an engineering perspective. The mathematical description is presented in the following equations. Like the LIF model, it is a threshold model, where different values of the parameters could be inputted to simulate a variety of neurons.
+
+\begin{equation}
+    \frac{dv}{dt}(t) = 0.04v^2+5v+140-u+I(t)
+\end{equation}
+\begin{equation}
+\frac{du}{dt}(t) = a(bv-u)
+\end{equation}
+\begin{equation}
+if \:u\geq30mV \: then \: \left\{
+\begin{array}{ll}
+     v = c &  \\
+     u = u+d & 
+\end{array}
+\right.
+\end{equation}
+
+The \(v\) value represents the membrane potential of the neuron while the \(u\) value represents a membrane recovery variable. In his work, Izhikevich showed that manipulating the a, b, c and d parameters, can produce a wide variety of neuronal responses. Later, in 2004 he stated\cite{Izhikevich2004} that the Izhikevich model ranks high in combining high biological plausibility and low implementation cost, amongst the existing models of its era. 
+
+Indeed, in the last decade, the Izhikevich model has been implemented in integrated circuits exploiting recent developments of the field. Multiple techniques that compete with each other such as MNIN\cite{Haghiri2018} and CORDIC\cite{Elnabawy2018} promise lower computational cost and error performance. The model has been tested in classical Artificial Intelligence tasks, either implemented in its own hardware, such as in this paper\cite{Rice2009}, where an FPGA was developed to represent an Izhikevich model based Spiking Neural Network and was tested in character recognition, or in software that simulates the response of the model. Single neurons have been tested in non-linear pattern recognition problems\cite{Antonio2010} showing the ability of an individual neuron in classifying multiple patterns. One clever exploitation of this ability is presented here\cite{luna-a2019} where the multilayer perceptron network used for the classification of a typical CNN is replaced by an Izhikevich neuron. As a result, this network achieves similar scores with typical CNNs while reducing the training time.
+
+Despite the promising statements from the creator of the model, in recent years, it has been criticized. Reviews and comparisons with other models (such as LIF and HH) show minuscule, if any, advantages. In 2014, Michael J. Skocik and Lyle N. Long compared the computational cost of the Izhikevich, LIF and Hodgkin-Huxley model using multiple arithmetic methods (so as to find the best implementation of each model)\cite{Skocik2014}. Their results showed that the Izhikevich model is comparable with the HH model in terms of computational cost, while the LIF model is, as expected the best out of the three. In 2017, Sergio Valadez-Godínez et al.\cite{Godinez2017} compared the same neuron models in terms of accuracy and cost if different fire rates. They also concluded, that in most cases, the Izhikevich model gave bad results, being less efficient than the HH model, while being more computationally expensive than the LIF model. A more recent study of 2020 from the same researchers\cite{Valadez-Godinez2020} presents and sums up the problems of the Izhikevich model that been proposed in the bibliography.
+
+\medskip
+
+\subsection{Spike Response Model - SRM}
+The Spike Response Model was developed, as an idea, in a series of papers in the last decade of the 20th century, but the name was first introduced in this paper \cite{Gerstner1993} of 1993. In this paper, Wulfram Gerstner et.al. present the mathematical model of the SRM neuron along with simulation results. The model resembles the Integrate-and-Fire model (IF model), with the difference that the membrane potential is dependent on various linear kernels that act on the incoming spikes. Furthermore, the threshold in this model is time-dependent in contrast to the Integrate-and-Fire model. In this book \cite{gerstner2014}, the authors dive into an extensive description and explanation of the SRM and its similarity with the IF model. The following set of equations (3.9), (3.10) describe the membrane potential and the threshold value of the model, respectively. The aforementioned kernels \(\eta(), \kappa()\) and \(\theta_1()\) can be interpreted as linear response filters acting on the incoming or the postsynaptic spikes. In more detail, the \(\kappa\) kernel is the linear response of the membrane for the incoming spike and it integrates the input current through time. The \(\eta\) kernel corresponds to the action potential of the neuron. This is better understood by the fact that the kernel affects the membrane potential and it is dependent on the \(t^f\) variable, which resembles the firing time of the neuron. The kernel has to contain even the negative overshoot of the neuron's potential. The \(\theta_1\) kernel describes the neuron's short-term plasticity and changes the threshold value of the neuron (in most cases) after the neuron fires.
+
+\begin{equation}
+u(t) = \sum_{t^f}\eta(t-t^f)+\int_0^\infty\kappa(s)I(t-s)ds+u_rest
+\end{equation}
+\begin{equation}
+\theta(t) = \theta_0 + \sum_{t^f}\theta_1(t-t^f)
+\end{equation}
+
+The model can also be interpreted as closed loop system where each kernel is a finite impulse response filter (FIR filter), the input of the system is the input current of the neuron, the output is the spike train that the neuron produces due to its input and the system's state itself is the membrane potential. The following image, taken from the book \cite{gerstner2014} gives an optical representation of the system mentioned above.
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=10cm]{Neurons-Synapses/SRM.jpg}
+    \caption{SRM diagram. Each filter corresponds to a kernel that describes the mathematical model. The system represents the membrane potential and the output, the spike train of the neuron}
+    \label{fig:lif-neuron}
+\end{figure}
+
+The abstract nature of the model due to the non-strictly defined kernel functions, gives the ability to implement a variety of neuron types and action potential responses and fine-tune the variables to create models that mimic the functionality of real neurons. In 2003 Reanut Jolivet et.al. showed that the Spike Response Model could predict with high accuracy the response of real neurons, given the same input \cite{Jolivet2003}. Improvements of the model have been proposed such as in \cite{Bohte2012} which make the model more biologically plausible
+
+The Spike Response Model is said to be a generalization of the Integrate and Fire model. That said, it may have been expected that 
+neural networks based on this neuron model would draw the attention of Artificial Intelligence engineers. Although some works have used such networks to tackle tasks like Breast Cancer Diagnostic, as shown in \cite{Ourdighi2016}, with impressive results, the SRM does not attract the interest of the engineering community. As a result only a few hardware implementations exist, such as \cite{Clayton2011}, while the model itself stands as a tool mainly from biological perspective.
+
+\subsection{Stochastic and Probabilistic Neuron model}
+
+All neuron models that have been presented were deterministic systems, described by fixed valued equations and deterministic inputs. As a result, by definition, knowing the initial state and the input signal, the response of the model can be deduced. This fact can be useful as it helps understanding important features as the stability of the model. However, it has been suggested that adding stochasticity in such biological systems can be useful since it gives the ability for weak signals to be detected. This idea is called stochastic resonance and was presented in 1981. Stochastic resonance is said to be present when the following three conditions exist in the system. First, there has to be an activation barrier, such as the threshold value presented in the previous models. Moreover, weak and periodic signals, such as the input spike-train must be applied. Finally, an input noise has to be applied in the input signal. Stochastic resonance is extensively analyzed in this work \cite{Gammaitoni1998}. This phenomenon is not only a useful tool from an engineering perspective, but is also observed in biological systems\cite{Honggi2002}. Consequently, there has been an extensive research in intentionally adding stochasticity (such as by applying a noisy input) or probability in neuron models, so as to exploit the effects of stochastic resonance.
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{Neurons-Synapses/Stochastic-resonance-occurs-when-an-optimal-level-of-noise-is-added-to-a-subthreshold.png}
+    \caption{Stochastic Resonance. An input noise is added to the weak signal. As a result, the new noisy input can exceed the threshold and the activation occurs. The intensity of the added noise plays an important role in the output and has to be handled carefully. A low intensity noise will not cause the input to exceed the threshold, while a high intensity one will dominate the input signal and the information will be lost.}
+    \label{fig:lif-neuron}
+\end{figure}
+
+Stochasticity, as mentioned before, does show up in biological models. Stochasticity of the system can be caused by a noisy input, as presented above, with the existance of stochastic resonance in deterministic models, such as in \cite{Clayton2011}. Nonetheless, the model itself can be guided by stochastic processes and probability embedded in its parameters. It is known that the opening and closing of ion pumps in the neurons is guided by some amount of stochasticity embedded in the system. To tackle this behavior, stochastic models of the Hodgkin-Huxley model have been proposed \cite{Fox1997} that treat the opening and closing of the ion pumps as non-deterministic events. While such models can be useful from biological perspective, they do not serve a remarkable purpose in developing trainable large-scale spiking neural networks due to their complexity. For such usage, non-deterministic model of other, simple models have been developed such as the LIF model and the Spike Response Model. The non-deterministic behaviour is usually added in parameters that correspond to the three phases of the neuron: the presynaptic, the membrane and the postsynaptic. In his work\cite{Kasabov2010}, N.Kasabov defines a probabilistic neuron model where each of the three aforementioned stages contribute with a probability for the spike arrival, the spike contribution to the neuron membrane and the spike generation. Developed network with stochastic neurons for pattern recognition tasks show features that deterministic SNNs lack of. A common conclusion that is typically mention is the robustness of the network compared with the deterministic one, as stated in this paper\cite{Dhoble2011} where the probabilistic LIF neuron model was used, and in this one\cite{Sinyavskiy2010} where this time a stochastic SRM with a spike generation probability was used. In this paper \cite{Wu2012} multiple non-deterministic models are compared to the corresponding deterministic, showing robustness and explicit behaviour.
+
+Another approach in adding stochasticity to the model is the infusion of stochastic diffusion. The most common model that uses the diffusion process as a stochastic neuron model is the Ornstein-Uhlenbeck model \cite{Lansky1995}. Another model that uses the same idea is the Feller model. As a result of their unique and complex nature, these types of models have attracted the interest and parameter estimation has been extensively studied over them, as presented in \cite{Ditlevsen2006} and in \cite{Lansky2008}. However, it should be mentioned that only the surface has been scratched of the stochastic neuron model family. There have been developed a wide variety of neuron models that exploit the stochasticity in different ways and have it act on different aspects of the model. Two more such models are presented here, the Galves–Löcherbach model \cite{Galves2013} and the stochastic Fitzhugh-Nagumo model \cite{Tuckwell1998}, left for the reader to dive into.
+
+As presented above, stochasticity in neuronal networks could be a useful tool to explore unnoticed behaviors of the systems, but one could argue that coding and implementing such systems in hardware is inefficient and probably computationally expensive. However, stochastic resonance has to do with adding noise to the input. As a result, by carefully manipulating the electronic components of the hardware, the naturally created noise can be added to the input and give the desired noisy input spike-train. Such devices, like stochastic memristors, have been tested in their ability to control the noise of the device and create fully stochastic switching devices \cite{Gaba2013}, and such devices have been used in developing hardware components with embedded stochasticity for spiking neural networks \cite{Maruan2015}. Moreover, memristors are not an one-way street in developing stochastic SNNs. Different components, such as the avalanche diode \cite{Clayton2011}, can be manipulated to produce the desired noisy input, or even to exploit smart architecture in FPGAs and develop stochastic SNNs with fully deterministic components, where stochasticity is digitally added \cite{Josep2012}. 
+
+One topic that stochastic SNNs (and ANNs in general) show potential is finding fast approximate solutions to NP-complete problems. Biological systems show a high ability in finding good enough solutions in constraint satisfaction problems. Knowing this, stochastic SNNs have been developed to mimic such behavior with satisfying results\cite{Fonseca2017}. Another promising use of stochastic spiking neural networks is their use as a reservoir computer or, in the case of spiking neural networks, liquid state machines. Liquid state machines(LSM) consist of a large collection of neurons that are randomly connected to each other and each one receives input spikes through time from an external source and other neurons in the LSM. Due to their architecture LSM have high capabilities in computing a large variety of non-linear functions and the added stochasticity can even further improve the framework. Such stochastic LSMs (sLSM) have already been tested against their deterministic LSM \cite{IEEE2011} and it has been deduced that they can perform better than the deterministic ones. This framework has already been used successfully for developing a SNN for EEG classification \cite{Nuntalid2011}.
+
+\bigskip
+\section{Spike Information Processing}
+\subsection{Information Representation}
+
+The added temporal dimension that is embedded in SNNs, gives rise to the need of encoding the input data in such ways that the Network can process. There are two main encoding schemes to represent the given information into spiketrain, rate coding and pulse or temporal coding. The choice of data encoding constitutes an important decision in the design of the Neural Model, as it gives the ability to develop models with different learning rules, compatible with the encoding scheme that was chosen, and form models in a wide spectrum of biological plausibility and engineering computability.
+
+\subsubsection{Rate Code}
+
+Rate coding is the encoding scheme where the information is encoded to the number of spikes emitted within a time window. The firing rate of a neuron is calculated as the number of spikes the neuron produces within a given time window. There are many encoding algorithms that are based on the rate coding scheme that count the firing rate of single neurons or population of neurons during one or multiple time windows. However, calculating the average firing rate of a population of neurons with similar properties over a time window may not be very useful in representing or extracting information. This method of representing the information is widely used due to its simplicity and low complexity. However, focusing of the number of spikes in a time window and not the exact time that each spike occurs, information that is encoded in the exact timing of the spike has little contribution or is even lost. Furthermore, while there are some cases that the firing rate of neurons actually represent information in biological systems, as shown here \cite{Huxter2003}, it is commonly accepted that rate coding shows little biological plausability. In this work \cite{Richmond1987}, Richmond and Optican showed that initial layers of neurons may be highly correlated with firing rate, but for "deeper" layers, there was little correlation between spike count and information representation. 
+
+\subsubsection{Temporal Code}
+
+Temporal coding is based on the idea that information is encoded in the exact time of the spike being emitted, or the time difference between spikes. Temporal coding is shown to carry more information as the timing of the spikes carry information on its own, increasing the efficiency of neural connections \cite{Mainen2009}. Temporal coding provides another very important feature that its possible absence makes the study of learning algorithms in Spiking Neural Networks difficult, differentiability. In this research \cite{Mostafa2018}, the authors show that the input-output relation of s SNN with temporal encoding scheme is differentiable almost everywhere. 
+
+\subsection{Encoding and Decoding Spikes}
+\subsubsection{Threshold-based encoding (or Temporal Contrast)}
+\subsubsection{Rank Order Coding (ROC)}
+\subsubsection{Population Rang Coding (POC)}
+\subsubsection{Ben’s Spike Encoding Algorithm (BSA)}
+\subsubsection{Step Forward (SF) Encoding algorithm}
+\subsubsection{Moving-Window (MW) Spike Encoding Algorithm}
+
+\section{Learning Methods}
+Having previously described methods of modeling neurons, this section analyzes learning rules that are used in Machine Learning with Spiking Neural Networks.
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{Learning Methods/spikeprop/spikeprop-net-architecture.PNG}
+    \caption{(A) Feedforward Spiking Neural Network, (B) A connection between neurons consisting of multiple synaptic terminals}
+    \label{fig:spikeprop-net-architecture}
+\end{figure}
+\subsection{SpikeProp}
+SpikeProp, a backpropagation-based method for supervised learning, was one of the first methods used to train Spiking Neural Networks \cite{bohte2002}. The timing of single-neuron spikes encodes the information during training. The paper's authors also empirically demonstrate that networks of biologically plausible spiking neurons can perform complex non-linear classification in a fast temporal encoding just as well as rate-coded networks.
+\subsubsection{Network Architecture}
+The architecture consists of a feedforward network of spiking neurons,in place of artificial neurons, followed by delayed synaptic terminals,as described in \cite{ruf1998}, see Fig. \ref{fig:spikeprop-net-architecture}. Spiking neurons usually generate action potentials(spikes) when the membrane potential crosses a threshold . The authors consider the membrane potential as an internal neuron state variable. The relationship between spikes and the neuron's internal state variable can be described by any neuron model, but in their implementation of SpikeProp, the Spike Response Model is used, as described in Section .. .
+
+A neuron \textit{j} in the network, receives input spikes from a set of pre-synaptic neurons \(\Gamma\textsubscript{j}\) with firing times \(t\textsubscript{j},i\in\Gamma\textsubscript{j}\) . The dynamics of the neuron's internal state variable \(x\textsubscript{j}\) is influenced by the pre-synaptic neurons according to a spike response function \(\varepsilon(t)\) and a synaptic weight \(w\textsubscript{ij}\).
+\begin{equation}
+    x\textsubscript{j}(t) = \sum_{i\in\Gamma\textsubscript{j}} w\textsubscript{ij}\varepsilon(t-t\textsubscript{i})
+\end{equation}
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{Learning Methods/spikeprop/spikeprop-connections-network.PNG}
+    \caption{Feedforward Spiking Neural Network Connections: (A) single synaptic terminal: the delayed
+pre-synaptic potential is weighted and produces a post-synaptic potential, (B)
+two multi-synapse connections with the weighted input being summed at the proceeding neuron.}
+    \label{fig:spikeprop-connections-network}
+\end{figure}
+The response function is responsible for the post synaptic potential,the spike that is being produced and the synaptic weight modulates the height of this potential. Each connection, Fig \ref{fig:spikeprop-net-architecture} (B), can be broken down further into \textit{m} fixed individual synaptic terminals,where each synaptic terminal has its own weight and delay . This delay is defined as the difference between the firing time of the
+pre-synaptic neuron, and the time the post-synaptic potential starts rising, Fig  \ref{fig:spikeprop-connections-network} (A) . A pre-synaptic spike at a synaptic terminal \textit{k} is defined as a Post Synaptic Potential of standard
+height with delay \(d^k\) . The unweighted term of a single synaptic terminal that contributes to state variable can be defined as:
+\begin{equation}
+    y^k\textsubscript{i}(t) = \varepsilon(t-t\textsubscript{i}-d^k) 
+\end{equation}
+The spike response function \(\varepsilon(t)\) has an initial value of zero.The time \(t\textsubscript{i}\) is the firing time of pre-synaptic neuron \textit{i} . The spike response function is given by:
+\begin{equation}
+    \varepsilon(t)=\frac{t}{\tau}e^{1-\frac{t}{\tau}}
+\end{equation}
+\(\tau\) models the membrane potential decay time constant that determines the rise and decay time of the PSP. The weighted sum of the pre-synaptic contributions is now:
+\[ \sum_{k=1}^{m}w\textsubscript{ij}^ky\textsubscript{i}^k(t) \]
+The variable \(w\textsubscript{ij}^ky)\) denotes the associated weight of synaptic terminal k ,Fig \ref{fig:spikeprop-connections-network} . The firing time \textit{t}\textsubscript{j} of neuron \textit{j} is equal to the first time when the state variable crosses the threshold \(theta\) . The threshold is a constant value and remains equal among all neurons.
+\subsubsection{BackPropagation with SpikeProp}
+The network has three layers as seen in Fig \ref{fig:spikeprop-net-architecture}, H(input),I(hidden),J(output) although more hidden layers can be used. The goal of this error-backpropagating algorithm is to learn a set of firing times ,{\(t\textsubscript{j}^d\)}, at the output neurons, {\(j\in J\)} for a given set of input patterns {\(P[t\textsubscript{1}...t\textsubscript{h}]\)}. The set of input patterns defines a single input pattern described by single spike times for each neuron  {\(h\in H\)}. The error-function used in the researchers experiments was  the least mean squares error-function, but again other choices can be made for it. Given desired spike
+times {\(t\textsubscript{j}^d\)} and actual firing times {\(t\textsubscript{j}^a\)} , the error function is defined as:
+
+\begin{equation}
+    E=1/2\sum_{j\in J}(t\textsubscript{j}^a-t\textsubscript{j}^d)^2
+\end{equation}
+Each synaptic terminal \textit{k} is considered as a separate connection with weight \(w\textsubscript{ij}^k)\). The backpropagation equations for the output neurons are:
+\begin{equation}
+    \Delta w\textsubscript{ij}^k=-\eta y\textsubscript{i}^k (t\textsubscript{j}^a) \delta \textsubscript{j}
+\end{equation}
+\begin{equation}
+\delta \textsubscript{j} = \frac { t\textsubscript{j}^d-t\textsubscript{j}^a}  {\sum_{i \in \Gamma \textsubscript{j} } \sum_{l} w \textsubscript{ij}^l(\partial y \textsubscript{i}^l(t \textsubscript{j}^a) / \partial t \textsubscript{j}^a)}
+\end{equation}
+Now, the equations for the hidden layers must be defined.
+\begin{equation}
+    \Delta w\textsubscript{hi}^k=-\eta y\textsubscript{h}^k (t\textsubscript{i}^a) \delta \textsubscript{i}
+\end{equation}
+\begin{equation}
+\delta \textsubscript{i} = \frac { \sum_{j \in \Gamma^i  }\delta\textsubscript{j}\sum_{k} w \textsubscript{ij}^k(\partial y \textsubscript{i}^k(t \textsubscript{j}^a) / \partial t \textsubscript{i}^a)}
+{ \sum_{h \in \Gamma \textsubscript{i} }\sum_{l} w \textsubscript{hi}^l(\partial y \textsubscript{h}^l(t \textsubscript{i}^a) / \partial t \textsubscript{i}^a)}
+\end{equation}
+Output classification was encoded in a way that the neuron coding for the respective class was assigned an early firing time. 
+\subsubsection{Important Remarks and Limitations}
+During experimentation according to the paper, the algorithm would not converge if both negative and positive weights existed. Additionally, for learning convergence it was necessary to incorporate both excitatory and inhibitory neurons.For encoding the input, a method for encoding input variables into temporal spike-time patterns by population coding is used.However,the encoding of input data is depended upon the experimenter's choice and is not restricted to one particular choice by the algorithm so performance can vary . Even though the algorithm looks promising ,it requires the same number of iterations compared to a standard MLP .However, given the explicit use of the time domain for calculations, it is supported that a network of spiking neurons is intrinsically more suited for learning and evaluating temporal patterns than sigmoidal networks.
+\subsection{Spike-Time Dependent Plasticity (STDP)}
+Spike-Time Dependent Plasticity (STDP)  is a biological process, a type of plasticity, that adjusts the strength of neural connections in the brain as described in 2.3.4. More specifically, STDP can be defined as the process that modifies the strength of the connections based on the relative timing of a neuron's output and input action potentials (or spikes). From a mathematician's point of view it can be seen as a temporally asymmetric form of Hebbian learning dependent on neurons' temporal corellations  induced by tight temporal correlations between the spikes of pre- and postsynaptic neurons \cite{stdp2010} . 
+
+STDP with Spiking Neural Networks is a form of unsupervised learning in Machine Learning Terms. During learning, the weight change \(\Delta w\textsubscript{j}\) of a synapse from a presynaptic neuron \textit{j} depends on the relative timing between presynaptic spike inputs and postsynaptic spikes. Set of presynaptic spike arrival times at synapse \textit{j},with count number \textit{f} is named \(t\textsubscript{j}^f\) . Similarly, firing times of postsynaptic neuron are named \(t\textsubscript{i}^n\). The total weight change then \cite{Gerstner1996} is defined as: 
+\begin{equation}
+\Delta w\textsubscript{j}=\sum_{f=1}^N\sum_{n=1}^N W(t\textsubscript{i}^n-t\textsubscript{j}^f)
+\end{equation}
+\(W(x)\) denotes the learning window,a usual choice is the following:
+$$
+W(x)=\begin{cases}
+			A\textsubscript{+}exp(-x/\tau\textsubscript{+}), & \text{for $x$\textgreater0}\\
+            -A\textsubscript{-}exp(x/\tau\textsubscript{-}), & \text{for $x$\textless0}
+		 \end{cases}
+$$
+The values A\textsubscript{+} and -A\textsubscript{-} may depend on the current value of W(x) and time constants \(\tau\) are on the order of 10ms. STDP has been shown to learn "early spike patterns" when a neuron is repeatedly presented with discrete volleys of input spikes, concentrating synaptic weights on inputs that consistently fire early, with the result that the postsynaptic spike latency decreases until it reaches a minimal and stable value. These findings hold true under a continuous regime in which inputs fire at a constant population rate. As a result, STDP can handle a difficult computing problem: localizing a recurring spatiotemporal spike pattern contained in equally dense ‘distractor' spike trains \cite{Masquelier2008}. STDP thus enables some form of temporal coding, even in the absence of an explicit time reference. It has been reported that repeating spatio-temporal spike patterns with millisecond precision exist in electrophysiological experiments \cite{Fellous2004}. In \cite{Masquelier2008} they show how STDP can learn the difficult task of detecting these repeating patterns, demonstrating once again how spiking neural networks can solve difficult tasks of this type with the appropriate learning rules.
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{Learning Methods/stdp/1.png}
+    \caption{In red a repeating 50 ms long pattern that concerns 50 afferents among 100 is indicated. The bottom panel plots the population-averaged firing rates over 10 ms time bins. The right panel plots the individual firing rates averaged over the whole period \cite{Masquelier2008}.}
+    \label{fig:stdp-1}
+\end{figure}
+
+One example of such a repeating pattern is shown in Fig \ref{fig:stdp-1} .The problem is complicated by the fact that neither the population firing rate nor the firing rates of the neurons participating in the pattern are unique during the periods when the pattern is present. This type of situation requires taking the spike times into account. Researchers show how a neuron making use of STDP can solve this problem leveraging the fact that a pattern is a series of spike coincidences. STDP is known to have the effect of concentrating synaptic weights on repeated early firing inputs, resulting in a decrease in postsynaptic spike latency when a neuron is repeatedly presented with similar volleys of input spikes.In other words,these inputs systematically lead to a shaping of the neuron's selectivity. This shaping was achieved in a variety of background noise conditions, as well as in situations where spiking latencies and firing rates, or synchronization, gave contradictory information \cite{rossum2000} \cite{guyonneau2005} \cite{masquelier2007} . The researchers indicate the limitation of these studies requiring an explicit time reference and wonder if STDP can recognize the repeating pattern in the absence of a time reference.
+
+To test this an arbitrary pattern was inserted as in Fig \ref{fig:stdp-1}, and investigated whether a single receiving STDP was able to learn it in an unsupervised manner. Input spikes were simulated according to a Poisson process where neurons fire stochastically and independently. The arbitrary pattern was purposely hidden from the firing rate of the neurons so it would be impossible to solve using the firing rates alone. By reinforcing the synaptic connections with the afferents that took part in firing the neuron(shaping the neuron's selectivity). When the pattern is shown again, the likelihood that the neuron will fire again is increased . Apart from shaping the neuron's selectivity, it also allows for convergence by saturation when all the spikes in the pattern that precede the postsynaptic spike already correspond to maximally potentiated synapses, and all are necessary to reach the threshold. Spikes outside the pattern are depressed so they don't contribute to the membrane potential. This leads to an absence of false "alarms" meaning that after learning the neuron only spikes when the pattern is present (Fig \ref{fig:stdp-converged}). If this occurs in the brain ,information about a stimulus can be readily available since neurons will fire on stimulus onset as postulated in \cite{thorpe2001}. 
+
+STDP also allows to incorporate oscillations as it was shown to be able to select only phase-locked inputs among a broad population with random phases, turning the postsynaptic neuron into a coincidence detector. By teaching the network to respond to certain phase-locked inputs it can coordinate and synchronize neural activity \cite{Gerstner1996}.One example demonstrated in the mentioned study, is how an owl is able to coordinate the neural activity between its two ears fast enough resulting in a reaction time before turning its head, of about 100ms. Learning with STDP selects synapse connections in such a way for the spikes to arrive coherently . Another example of such need for coordination with oscillations is during saccadic eye movement.  To effectively make use of the spatial information contained in the luminance modulations resulting from eye movements, analysis of neural activity needs to be timed relative to the occurrence of saccades. For example, a spike from the same neuron carries a different informational value if occurring during early fixation, when the input change caused by the preceding saccade still exerts its influence, or later, when temporal changes are only caused by ocular drift \cite{Rucci2018}.The frequencies of visual cortical oscillations can be controlled locally  and  can  be  modulated  by  and locked to external stimuli \cite{Ahissar2012}.
+
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{Learning Methods/stdp/stdp-converged.png}
+    \caption{The pattern is represented as grey line rectangle. Take note of the cluster of white spikes at the beginning: Most of the synapses that correspond to the pattern's early spikes have been potentiated by STDP. It's worth noting that almost all synaptic connections with afferents that aren't engaged in the pattern have been fully suppressed. (b) Over the same range as above, the membrane potential is displayed as a function of time. The abrupt spike that corresponds to the above-mentioned cluster is readily visible \cite{Masquelier2008}. 
+    \label{fig:stdp-converged}}
+\end{figure}
+
+
+\subsection{Surrogate Gradient Learning in Spiking Neural Networks}
+We use this paper to introduce you to the surrogate gradient methods, as surrogate gradients are used widely in other learning methods which we will see later. Additionally the authors formally map SNNs to RNNs. Formulating SNNs as RNNs allows to transfer and apply existing training methods for RNNs . This mapping is important if we want to train a larger number of layers with Spikes .This paper also introduces how to solve the credit assignment problem with many layers and also the major issues with multi-layer Spiking Neural Networks that make training much harder than traditional neural networks.
+\subsubsection{Mapping RNNs to SNNs}
+In the broadest sense, RNNs are networks whose state evolves over time according to a set of recurrent dynamical equations. Such dynamical recurrence can occur by the presence of recurrent synaptic connections between neurons in the network. In today's machine learning research this is the most common definition of what an RNN is. This occurs, for example, when stateful neuron or synapse models with internal dynamics are employed. These dynamics are intrinsically recurrent since the network's state at a given time step recurrently depends on its state at prior time steps. The paper as per usual uses the LIF neuron model(equation \ref{eqn:integratedsuperspike} for the membrane voltage) which we have seen in previous sections.However, an additional term for recurrent connections in the synaptic current equation can be added:
+\begin{equation}
+\label{eqn:surrogate_current_dynamics}
+\frac{\mathrm{d} I_{i}^{(l)}}{\mathrm{d} t}=-\underbrace{\frac{I_{i}^{(l)}(t)}{\tau_{\mathrm{syn}}}}_{\text {exp. decay }}+\underbrace{\sum_{j} W_{i j}^{(l)} S_{j}^{(l-1)}(t)}_{\text {feed-forward }}+\underbrace{\sum_{j} V_{i j}^{(l)} S_{j}^{(l)}(t)}_{\text {recurrent }}
+\end{equation}
+
+the sum runs over all presynaptic neurons $j$ and $W_{i j}^{(l)}$ are the corresponding afferent weights from the layer below. The $V_{i j}^{(l)}$ correspond to explicit recurrent connections within each layer,this corresponds to additional term we are talking about. The authors also state that with recurrent connections a single LIF neuron can be simulated with two linear differential equations whose initial conditions change instantly anytime a spike occurs.So , the reset term can be inserted in the membrane potential equation as an extra term that instantaneously decreases the membrane potential by $\left(\vartheta-U_{\text {rest }}\right)$ whenever the neuron emits a spike:
+\begin{equation}
+\label{eqn:surrogate_membrane_dynamics}
+\frac{\mathrm{d} U_{i}^{(l)}}{\mathrm{d} t}=-\frac{1}{\tau_{\mathrm{mem}}}\left(\left(U_{i}^{(l)}-U_{\text {rest }}\right)+R I_{i}^{(l)}\right)+S_{i}^{(l)}(t)\left(U_{\text {rest }}-\vartheta\right)
+\end{equation}
+The above equations need to be approximated in discrete for a computer simulation .Also,the output spike train $S_{i}^{(l)}[n]$ of neuron $i$ in layer $l$ at time step $n$ needs to expressed as a nonlinear function of the membrane voltage $S_{i}^{(l)}[n] \equiv \Theta\left(U_{i}^{(l)}[n]-\vartheta\right)$ where $\Theta$ denotes the Heaviside step function and $\vartheta$ corresponds to the firing threshold. The simulation time step also needs to be small for the approximation to work properly.Equation \ref{eqn:surrogate_current_dynamics} becomes:
+\begin{equation}
+I_{i}^{(l)}[n+1]=\alpha I_{i}^{(l)}[n]+\sum_{j} W_{i j}^{(l)} S_{j}^{(l)}[n]+\sum_{j} V_{i j}^{(l)} S_{j}^{(l)}[n]
+\end{equation}
+Decay strength: $\alpha \equiv \exp \left(-\frac{\Delta_{t}}{\tau_{\mathrm{syn}}}\right) .$  For finite and positive $\tau_{\mathrm{syn}}$:$0<\alpha<1$. Also, $S_{j}^{(l)}[n] \in\{0,1\} .$ The variable $n$ is used to denote the time step. The equation \ref{eqn:surrogate_membrane_dynamics} is now:
+\begin{equation}
+U_{i}^{(l)}[n+1]=\beta U_{i}^{(l)}[n]+I_{i}^{(l)}[n]-S_{i}^{(l)}[n]
+\end{equation}
+with $\beta \equiv \exp \left(-\frac{\Delta_{t}}{\tau_{\text {mem }}}\right)$
+With these two equations at hand the state of neuron $i$ can be found by the instantaneous synaptic currents $I_{i}$ and the membrane voltage $U_{i}$ (Box. 1$] .$ The computations necessary to update the cell state can be unrolled in time,according to the authors of the paper, as shown in the computational graph in fig \ref{fig:computationgraph}.
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=6cm]{Learning Methods/surrogate/computationgraph.jpg}
+    \caption{}
+    \label{fig:computationgraph}
+\end{figure}
+This is a usual illustration method used for Recurrent Neural Networks so the mapping of SNNs into RNNs comes very handy here.Time steps flow from left to right.
+\begin{itemize}
+    \item Input spikes $\mathbf{S}^{(0)}$ are inserted in the bottom and propagate upwards to higher layers.
+    \item The synaptic currents $\mathbf{I}$ are decayed by $\alpha$ in each time step and fed into the membrane potentials $\mathbf{U}$.The $\mathbf{U}$ are decaying over time as characterized by $\beta .$
+    \item Spike trains $S$ are generated by applying a threshold nonlinearity to the membrane potentials $\mathrm{U}$ in each time step.
+    \item  Spikes causally affect the network state (red connections).
+    
+\end{itemize}
+The authors of the paper also inform us about how the spikes can be communicated inside the network
+First, each spike causes the membrane potential of the neuron that emits the spike to be reset. Second, each spike may be fed back to the same neuronal population via recurrent connections $\mathbf{V}^{(1)}$. It can also be fed $\mathbf{W}^{(2)}$ to a network layer further down or, fed to a readout layer on which a cost function is defined.
+\subsubsection{Credit Assignment Problem}
+As in every learning rule the first step is to choose a cost/loss function which gets reduced when the network starts learning what we want it to learn. The second step is to choose how the weights of the connections update during training to reduce the cost/loss function. This is called the credit assignment problem. One way to solve this problem is to use spatial credit assignment by backpropagation which comes at significant memory costs as the gradients need to be communicated back to network since we are storing all neuron states . Let's see how backpropagation works in Recurrent Neural Networks:
+Backpropagation in RNNs can be applied by "unrolling": an auxiliary network is created by making copies of the network for each time step.he same rule can be applied to RNNs. In this case the recurrence is "unrolled" (Fig \ref{fig:unroll} ) meaning that an auxiliary network is created by making copies of the network for each time step.
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=6cm]{Learning Methods/surrogate/unroll.PNG}
+    \caption{}
+    \label{fig:unroll}
+\end{figure}
+
+The unrolled network is simply a deep network with shared feedforward weights $\mathbf{W}^{(l)}$ and recurrent weights $\mathbf{V}^{(l)}$, on which the standard BP applies:
+\begin{equation}
+\Delta W_{i j}^{(l)} \propto \frac{\partial}{\partial W_{i j}^{(l)}} \mathcal{L}[n]=\sum_{m=0}^{t} \delta_{i}^{(l)}[m] y_{j}^{(l-1)}[m]
+\end{equation}
+\begin{equation}
+\Delta V_{i j}^{(l)} \propto \frac{\partial}{\partial V_{i j}^{(l)}} \mathcal{L}[n]=\sum_{m=1}^{t} \delta_{i}^{(l)}[s] y_{j}^{(l)}[m-1]
+\end{equation}
+\begin{equation}
+\delta_{i}^{(l)}[n]=\sigma^{\prime}\left(a_{i}^{(l)}[n]\right)\left(\sum_{k} \delta_{k}^{(l+1)}[n] W_{i k}^{\top, l}+\sum_{k} \delta_{k}^{(l)}[n+1] V_{i k}^{\top, l}\right)
+\end{equation}
+The superscripts $l=0, \ldots, L$ denote the layer $(0$ is input, $L$ is output) .With $\alpha_{i}^{(l)}[n]=\sum_{j} W_{i j} x_{j}$ we denote the total input to the neuron i, $y_{j}$ is the output of neuron j, and $\eta$ a small learning rate.Also, $\sigma^{\prime}$ is the derivative of the activation function, and $\delta_{i}^{(l)}$ is the error of output neuron $i$ and $T$ indicates the transpose. Applying BP to an unrolled network is called backpropagation through time (BPTT).
+
+The second way to solve this is to use a temporal credit assignment (Fig \ref{fig:computationgraph} is considered a temporal credit assignment problem) . This type of temporal assignment can be further subdivided in the backward and forward methods.
+\begin{enumerate}
+  
+    \item Backward Method: We can use BPTT as in the spatial credit assignment, we propagate the errors backwards through time after a forward pass.
+    \item Forward Method: All the necessary information to compute the gradients is propagate forwards in time \cite{williams1989} .  For example, the "forward gradient" of the feed-forward weight $\mathbf{W}$ becomes:
+\end{enumerate}
+
+\begin{equation*}
+\Delta W_{i j}^{m} \propto \frac{\partial \mathcal{L}[n]}{\partial W_{i j}^{m}}=\sum_{k} \frac{\partial \mathcal{L}[n]}{\partial y_{k}^{(L)}[n]} P_{i j k}^{L, m}[n]
+P_{i j k}^{(l, m)}[n]=\frac{\partial}{\partial W_{i j}^{m}} y_{k}^{(l)}[n]
+\end{equation*}
+\begin{equation*}
+P_{i j k}^{(l, m)}[n]=\sigma^{\prime}\left(a_{k}^{(l)}[n]\right)\left(\sum_{j^{\prime}} V_{i j^{\prime}}^{(l)} P_{i j j^{\prime}}^{(l, m)}[n-1]+\sum_{j^{\prime}} W_{i j^{\prime}}^{(l)} P_{i j j^{\prime}}^{(l-1, m)}[n-1]+\delta_{l m} y_{i}^{(l-1)}[n-1]\right)
+\end{equation*}
+The gradients with respect to recurrent weights $V_{i j}^{(l)}$  can similarly be computed. The backward optimization method is more efficient in terms of computation, but requires maintaining all the inputs and activations for each time step. So, space complexity for each layer is $O(N T)$, where $N$ is the number of neurons per layer and $T$ is the number of time steps. The forward method requires maintaining variables $P_{i j k}^{(l, m)}$, resulting in a $O\left(N^{3}\right)$ space complexity per layer. However, if simplifications are applied this complexity can be brought down to  O(N), such as in the Decolle learning rule which we describe later. The simplifications can also reduce the computational complexity.
+However the above algorithms cannot be directly applied . One issue is the non-deferentially of the spiking nonlinearity. The derivative of the neural activation function $\sigma^{\prime} \equiv \frac{\partial y_{i}^{(l)}}{\partial a_{i}^{(l)}}$ is a problem because for a spiking neuron,  we have $S(U(t))=\Theta(U(t)-\vartheta)$, whose derivative is zero everywhere except at $U=\vartheta$, where it is ill defined. Standard BP, apart from the expensive computation,memory communication requirements, it is poorly suited for neuromorphic hardware nor is it biologically realistic. This type of hardware has locality requirements that prohibits BP all together. The forward method might be more applicable however the scaling of the above methods is not suitable for many SNN models according to the authors.
+Solving the first has many approaches:
+\begin{enumerate}
+\item Using biologically inspired local learning rules for the hidden units
+\item Translating conventionally trained "rate-based" neural networks to SNNs
+\item Smoothing the network model to be continuously differential
+\item Defining a surrogate gradient (SG) as a continuous relaxation
+\end{enumerate}
+
+The main contribution of this research paper is for the last approach, using surrogate gradients and also inform us about smoothing methods too. However , we are only interested in defining the surrogate gradient approach.
+\subsubsection{Surrogate Gradients Approaches}
+The surrogate gradient approach can be further broken down into two approaches:
+\begin{enumerate}
+    \item SGs that make up a continuous relaxation
+of the non-smooth spiking nonlinearity. This does not influence the optimization algorithm.\ref{fig:sg}
+    \item SGs that affect locality of the underlying optimization algorithms themselves to improve the computational and/or memory access overhead of the learning process. 
+\end{enumerate}
+One major advantage with Surrogate Gradients we don't need to specify to specify which coding method is to be used in the hidden layers. In the first surrogate gradient approach researchers usually use BPTT  and they replace the derivative of the spiking nonlinearity with the derivative of a smooth function. This approach is used in Decolle and quite simple to implement and handy to implement as it can be combined with auto-differentiation tools. The superspike algorithm uses a three factor online learning rule using a fast sigmoid to construct a SG. Surrogate Gradients are also used in e-Prop which we will examine after Decolle. 
+\subsubsection{Surrogate Gradient Issues}
+As the use of SGs to train SNNs progresses to deeper architectures, more issues, similar to those seen in ANNs, are likely to occur. SGs formed from sigmoidal activation functions,that have vanishing gradient issues. Another issue is the potential bias that SGs introduce into the learning dynamics.
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=6cm]{Learning Methods/surrogate/SG.jpg}
+    \caption{For more details refer to the original Surrogate Gradient paper \cite{Neftci2019}. What's important here is to look how the surrogate gradient approach allows us to have continuous function}
+    \label{fig:sg}
+\end{figure}
+\subsubsection{Conclusion}
+In this chapter we introduced the reader to the major issues in training spiking neural networks and how these hinder SNNs to reach the capacity of ANNs. The mapping to RNNs allows SNNs to be more approachable to machine learning engineers that don't have a neuroscience background and makes it is easier to understand the scaling issues .This chapter does not introduce new a learning algorithm but it allows us to apply BPTT with the use of surrogate gradients. Surrogate gradients is a very successful approach in solving the non-differentiable gradient issue, as seen from the amount of new SNN algorithms involving them.We included this section as all the following algorithms in our dissertation involve surrogate gradients .
+\subsection{SuperSpike: Supervised Learning in Multilayer Spiking Neural Networks}
+Superspike is a surrogate gradient approach, a nonlinear voltage-based three
+factor learning rule capable of training multi-layer networks of deterministic integrate-and-fire neurons to perform nonlinear computations on spatio-temporal spike patterns. By translating Backprop to the spiking domain, it's  one of the few initiatives to tackle the difficulty of training SNNs with hidden units to process precisely timed input and output spike trains.
+
+The partial derivatives of this approach are of the form $\partial S_{i}(t) / \partial w_{i j}$ where $S_{i}(t)=\sum_{k} \delta\left(t-t_{i}^{k}\right)$ is the spike train of the hidden neuron $i$ and $w_{i j}$ is a hidden weight.
+
+In comparison to other methods in the literature, Superspike allows multi-layer networks of deterministic LIF neurons to solve tasks involving spatiotemporal spike pattern transformations without the need for noise injection, even when hidden units are initially completely silent, as described in the SuperSpike research paper. Instead of the postsynaptic spike train, the partial derivative of the hidden unit outputs is approximated as the product of the filtered presynaptic spike train and a nonlinear function of the postsynaptic voltage.
+\subsubsection{SuperSpike learning rule}
+It is desired that a single LIF neuron emits a given target spike train $\hat{S}_{i}$ for a given input. This problem can be considered an optimization problem of minimizing the van Rossum distance \cite{rossum2001} between $\hat{S}_{i}$ and the actual output spike train $S_{i}$.  First, let us describe what the van Rossum distance is. The van Rossum distance aims to solve the task of discriminating between two spike trains .M. C. W. van Rossum introduced a measure for the distance between two spike trains.
+With the goal of a simple distance measure, given a spike train with spike times $t_{i}$
+\begin{equation}
+f^{\text {orig }}(t)=\sum_{i}^{M} \delta\left(t-t_{i}\right)
+\end{equation}
+where it is assumed that all $t_{i}>0$. The delta function associated with each spike is replaced with an exponential function, that is, an exponential tail is added to all spikes,
+\begin{equation}
+f(t)=\sum_{i}^{M} H\left(t-t_{i}\right) e^{-\left(t-t_{i}\right) / t_{c}}
+\end{equation}
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=10cm]{Learning Methods/superspike/vanrossum/vanrossum.jpg}
+    \caption{(Top) Two spike trains (one flipped) are convolved with an exponential with time constant $t_{c}$. (Bottom) The difference squared of the spike trains. The integral of the curve gives the desired distance
+    \cite{rossum2001}
+}
+    \label{fig:vanrossum}
+\end{figure}
+
+$t_{c}$ is the time constant of the exponential function and $H$ is the Heaviside step function $(H(x)=0$ if $x<0$ and $H(x)=1$ if $x \geq 0) .$ . Any function can be used to convolve with other than the exponential but the exponential was chosen because of its biological proximity. The distance between two trains $f$ and $g$ is defined as (see Fig.\ref{fig:vanrossum})
+\begin{equation}
+D^{2}(f, g)_{t_{c}}=\frac{1}{t_{c}} \int_{0}^{\infty}[f(t)-g(t)]^{2} d t
+\end{equation}
+The distance is the Euclidean distance of the two filtered spike trains($t_{c}$ as a free parameter).
+M. C. W. van Rossum gives us a sense of the distance with the following example.He wants us to consider the two limits of $t_{c} .$ For $t_{c}$ much smaller than the interspike interval, the smeared functions $f$ and $g$ contribute to the integral only if the spikes are not more than $t_{c}$ apart. This is reminds us of coincidence detection. For most spike trains, coincident spikes can be neglected in the limit of zero $t_{c}$; thus, if $f$ contains $M$ and $g$ contains $N$ spikes, one has
+\begin{equation}
+\lim _{t_{c} \rightarrow 0} D^{2}(f, g)_{t_{c}}=\frac{1}{t_{c}} \int_{0}^{\infty}\left[f^{2}(t)+g^{2}(t)\right] d t=\frac{M+N}{2}
+\end{equation}
+This distance basically counts the noncoincident spikes.
+However, for large $t_{c}$, the main contribution to the integral comes from times when the last spike has passed but the exponent has still not decayed.The integral is mostly influenced by times when the last spike has passed but the exponent has not yet decayed. Assuming that $f(g)$ contains $M(N)$ spikes, one can approximate
+\begin{equation}
+\lim _{t_{c} \rightarrow \infty} D^{2}(f, g)_{t_{c}}=\frac{1}{t_{c}} \int_{0}^{\infty}\left(M e^{-t / t_{\mathrm{c}}}-N e^{-t / t_{c}}\right)^{2} d t=\frac{(M-N)^{2}}{2}
+\end{equation}
+In this limit, $D$ measures the difference in total spike count.The upper limit of the integral needs to be taken to be infinity as we interested for the tail of the last spike that died out rather than the time of the last spike
+
+The distance thus interpolates between the two extremes of coincidence detection and measuring difference in total spike count. After filtering, the spike trains this leaves a sum of $N+M$ terms.
+Changing integration variables leads to an alternative expression for the distance,
+\begin{equation}
+D^{2}(f, g)=\frac{1}{2} \int_{-\infty}^{\infty} C_{f-g, f-g}(t) e^{-|t| t_{c}} d t
+\end{equation}
+where $C_{f-g, f-g}(t)$ is the autocorrelation of the difference of the raw spike trains, $f^{\text {orig }}(t)-g^{\text {orig }}(t) .$This demonstrates that the distance can be represented as a weighted integral over the autocorrelation, with the weighting varying with $t_{c}$. It also demonstrates that the distance is unaffected by time reversal, i.e., the distance would be the same if the exponential tails were attached to the spikes on the opposite sides.Regarding the choice of the exponential M. C. W. van Rossum states that the convolution in a higher-order neuron for short and medium periods can be read as postsynaptic potentials. Longer $t_{c}$ appears to be better served by slower second messenger or calcium-induced currents. 
+Now lets us continue with optimization problem of minimizing the van Rossum distance \cite{rossum2001} between $\hat{S}_{i}$ and the actual output spike train $S_{i}$:
+\begin{equation}
+L=\frac{1}{2} \int_{-\infty}^{t} d s\left[\left(\alpha * \hat{S}_{i}-\alpha * S_{i}\right)(s)\right]^{2}
+\end{equation}
+
+where $\alpha$ is a normalized smooth temporal convolution kernel. Because they can be easily computed online and implemented as electrical or chemical traces in neurobiology, double exponential causal kernels are used. Computing the gradient of the above equation with respect to the synaptic weights $w_{i j}$:
+
+\begin{equation}
+\frac{\partial L}{\partial w_{i j}}=-\int_{-\infty}^{t} d s\left[\left(\alpha * \hat{S}_{i}-\alpha * S_{i}\right)(s)\right]\left(\alpha * \frac{\partial S_{i}}{\partial w_{i j}}\right)(s)
+\end{equation}
+in which the derivative $\partial S_{i} / \partial w_{i j}$ is the derivative of the spike train . This derivative for most neuron models it is zero except at spike times at which it is not defined. This is a huge problem for backpropagation . Previous training algorithms avoid this problem by either performing optimization directly on the membrane potential $U_{i}$ or by introducing noise which makes the likelihood of the spike train $\left\langle S_{i}(t)\right\rangle$ a smooth function of the membrane potential. Superspike combines these two approaches by replacing the spike train $S_{i}(t)$ with a continuous auxiliary(helper) function $\sigma\left(U_{i}(t)\right)$ of the membrane potential. For performance reasons, the authors of Superspike choose $\sigma(U)$ to be the negative side of a fast sigmoid . This "helper" function" replaces the derivative of the spike train as follows:
+\begin{equation}
+\frac{\partial S_{i}}{\partial w_{i j}} \quad \rightarrow \quad \sigma^{\prime}\left(U_{i}\right) \frac{\partial U_{i}}{\partial w_{i j}}
+\end{equation}
+
+To compute the derivative $\partial U_{i} / \partial w_{i j}$ in the expression above, for current-based LIF models the membrane potential $U_{i}(t)$ as a spike response model:
+
+\begin{equation}
+U_{i}(t)=\sum_{j} w_{i j}\left(\epsilon * S_{j}(t)\right)+\left(\eta * S_{i}(t)\right)
+\end{equation}
+
+The causal membrane kernel $\epsilon$ corresponds to the postsynaptic potential (PSP) shape and $\eta$ describe the spike dynamics and reset. Due to the second term, $U_{i}$ depends on its own past through its output spike train $S_{i}$. 
+
+
+The dependence of its own past does not allow us to compute the derivative $\frac{{\partial U}_{i}}{\partial w_{i j}}$ directly. However, by ensuring low firing rates(by adding homeostatic mechanisms that regularize neuronal activity levels) we can ignore the second term.
+
+Ignoring the second term, the equation becomes the filtered presynaptic activity $\frac{\partial U_{i}}{\partial w_{i j}} \approx\left(\epsilon * S_{j}(t)\right)$. Biologically, this can be interpreted as the concentration of neurotransmitters at the synapse. 
+
+Substituting this approximation back into Eq. (4.26), the gradient descent learning rule for a single neuron becomes:
+
+\begin{equation}
+\label{eqn:superspike}
+\frac{\partial w_{i j}}{\partial t}=r \int_{-\infty}^{t} d s \underbrace{e_{i}(s)}_{\text {Error signal }} \underbrace{\alpha * \underbrace{\sigma^{\prime}\left(U_{i}(s)\right)}_{\text {Post }} \underbrace{\left(\epsilon * S_{j}\right)(s)}_{\text {Pre }})}_{\equiv \lambda_{i j}(s)}
+\end{equation}
+The learning rate is symbolized with $r$ and short notation for the output error signal $e_{i}(s) \equiv \alpha *\left(\hat{S}_{i}-S_{i}\right)$ and the eligibility trace (a temporary
+record of the occurrence of an event)  $\lambda_{i j} .$ In practice the expression  is evualated on minibatches and Superspike suggests using a per-parameter learning rate $r_{i j}$ to speed up learning.
+
+The last equation corresponds to the SuperSpike learning rule for output neuron $i$. 
+By redefining the error signal $e_{i}$ as a feedback signal, the same rule for hidden units can be used as well. Important properties: 
+\begin{itemize}
+  \item It includes Hebbian term which combines pre- and postsynaptic activity
+  \item The learning rule is voltage-based
+  \item is a nonlinear Hebbian rule due to the occurrence of $\sigma^{\prime}\left(U_{i}\right)$
+  \item The causal convolution with $\alpha$ acts as an eligibility trace to solve the distal reward problem due to error signals arriving after an error was made \cite{izike2007} and,
+  \item It is a three factor rule in which the error signal plays the role of a third factor \cite{fremaux2016} . The error signal is specific to the postsynaptic neuron.
+\end{itemize}
+The "distal reward problem" is an explanatory conundrum  that occurs when rewards arrive seconds after reward-triggering events. How does the brain recognize which firing patterns of which neurons are responsible for the reward if 1) the patterns are no longer there when the reward arrives and 2) all neurons and synapses are active during the reward's waiting period?
+\subsubsection{Neuron model}
+The LIF neuron model with current-based synaptic input is used to use the integral form. For the membrane dynamics simulation the voltage $U_{i}$ of neuron $i$ can be computed as follows:
+\begin{equation}
+\label{eqn:lifvoltage}
+\tau^{\mathrm{mem}} \frac{d U_{i}}{d t}=\left(U^{\text {rest }}-U_{i}\right)+I_{i}^{\mathrm{syn}}(t)
+\end{equation}
+in which the synaptic input current $I_{i}^{\text {syn }}(t)$ changes according to the following equation:
+\begin{equation}
+\frac{d}{d t} I_{i}^{\mathrm{syn}}(t)=-\frac{I_{i}^{\mathrm{syn}}(t)}{\tau^{\mathrm{syn}}}+\sum_{j \in \mathrm{pre}} w_{i j} S_{j}(t)
+\end{equation}
+The value of $I_{i}^{\mathrm{syn}}(t)$ jumps by an amount $w_{i j}$ at the moment of spike arrival from presynaptic neurons $S_{j}(t)=\sum_{k} \delta\left(t-t_{j}^{k}\right)$ . $\delta$ denotes the Dirac $\delta$ -function and $t_{j}^{k}(k=1,2, \cdots)$ are firing times of neuron $j .$ / To see the values of the following constants read the original Superspike paper as we are not that interested in the implementation details here but more in the theoretical basis of the learning method.
+\begin{itemize}
+    \item An action potential is triggered when the membrane voltage of neuron $i$ reaches a value above a threshold value $\vartheta$ . 
+    \item Following a spike the voltage $U_{i}$ remains clamped at $U_{i}^{\text {rest }}$ for $\tau^{\mathrm{ref}}$ to emulate a refractory period. 
+    \item After generation, spikes are propagated to other neurons with an axonal delay .
+\end{itemize}
+
+\subsubsection{Plasticity model}
+The learning rule can be interpreted as a nonlinear Hebbian three factor rule. The nonlinear Hebbian term detects coincidences between presynaptic activity and postsynaptic depolarization. These spatiotemporal coincidences at the single synapse $w_{i j}$ are then stored transiently by the temporal convolution with the causal kernel $\alpha$ . This step can be interpreted as a synaptic eligibility trace. 
+
+All necessary quantities are computed online without the need to propagate error signals backwards through time. So, Superspike can be interpreted as an implementation of real-time recurrent learning (RTRL) \cite{williams1989} for spiking neural networks. 
+
+In the model, all the complexity of neural feedback of learning is absorbed into the per-neuron signal $e_{i}(t) .$ . Because it's unclear whether and how such erroneous feedback is sent to individual neurons in biology the authors tested numerous ways which we won't go into much detail. The previously mentioned equation of the Superspike learning rule is integrated  over finite temporal intervals before updating the weights. The full learning rule can be written as follows:
+\begin{equation}
+\label{eqn:integratedsuperspike}
+\Delta w_{i j}^{k}=r_{i j} \int_{t_{k}}^{t_{k+1}} \underbrace{e_{i}(s)}_{\text {Error signal }} \alpha *(\underbrace{\sigma^{\prime}\left(U_{i}(s)\right)}_{\text {Post }} \underbrace{\left(\epsilon * S_{j}\right)(s)}_{\text {Pre }}) d s
+\end{equation}
+The evaluation of the Superspike learning rule equation can be described as follows: i) evaluation of presynaptic traces, ii) evaluation of Hebbian coincidence and computation of synaptic eligibility traces, iii) computation and propagation of error signals, and iv) integration of the given Superspike equation and weight update. 
+
+\subsubsection{Presynaptic traces}
+Because $\epsilon$ is a double exponential filter, the temporal convolution in the expression of the presynaptic traces (Eq. \ref{eqn:integratedsuperspike}), can be evaluated efficiently online by exponential filtering twice. First , the integration the single exponential trace
+
+\begin{equation}
+\frac{d z_{j}}{d t}=-\frac{z_{j}}{\tau_{\text {rise }}}+S_{j}(t)
+\end{equation}
+in every time step which is then fed into a second exponential filter array
+\begin{equation}
+\tau_{\text {decay }} \frac{d \tilde{z}_{j}}{d t}=-\tilde{z}_{j}+z_{j}
+\end{equation}
+with $\tilde{z}_{j}(t) \equiv\left(\epsilon * S_{j}\right)(t)$ which now implements the effective shape of a PSP in the model. 
+\subsubsection{Hebbian coincidence detection}
+To evaluate the Hebbian term , the surrogate partial derivative $\sigma^{\prime}\left(U_{i}\right)$ is evaluated in every time step. 
+
+The outer product between the delayed presynaptic traces $\tilde{z}_{j}(t-\Delta)$ and the surrogate partial derivatives $\sigma^{\prime}\left(U_{i}\right)(t-\Delta)$ is calculated in every time step.
+\subsubsection{Synaptic eligibility traces}
+To implement the synaptic eligibility trace as given by the temporal filter $\alpha$, the values of Hebbian product term are filtered with two exponential filters z\textsubscript{j} . these traces now need to be computed for each synapse $w_{i j}$ which makes the algorithm scale as $O\left(n^{2}\right)$ for $n$ being the number of neurons. For SuperSpike to function properly, it is important that these transients are long enough to coincide with any related error signal $e_{i}(t)$. The duration of the transient in the model is given by the filter kernel shape used to compute the van Rossum distance.
+\subsubsection{Error signals}
+Output error signals are linked to output units that have a specific target signal. Their details are determined by the underlying chosen cost function . 
+
+At the level of output errors two ways can be used to to learn the output.To learn precisely timed output spikes, the output error signals were exactly given by $e_{i}=\alpha *\left(\hat{S}_{i}-S_{i}\right)$ for an output unit $i$. As can be seen from the equation, the error signal $e_{i}$ is zero only if the target and the output spike train exactly match with the temporal precision of our simulation. All cost function values were computed online as the root mean square in the superspike paper.
+
+To second way is to classify input spike patterns , we introduced some slack into the computation of the error signal. Instantaneous negative error feedback is given by $e_{i}=-\alpha * S_{i}^{\text {err }}$ for each unnecessary additional spike $S_{i}^{\text {err }}$. A positive feedback signal $e_{i}=\alpha * S_{i}^{\text {miss }}$ when a stimulus failed to emit an output spike when it should have .
+
+\subsubsection{Feedback signals}
+Feedback signals, are derived from output error signals by feeding them back to the hidden units.
+
+Different credit assignment strategies for hidden units can be used. Symmetric, random and uniform feedback are some examples of feedback signals. 
+
+Symmetric feedback:computed as the weighted sum $e_{i}=\sum_{k} w_{k i} e_{k}$ of the downstream error signals using the actual feed-forward weights $w_{i k} .$  
+
+Random feedback: They are computed as the random projection $e_{i}=\sum_{k} b_{k i} e_{k}$ with random coefficients $b_{k i}$ drawn from a normal distribution with zero mean and unit variance,
+
+Uniform feedback: all weighting coefficients were simply set to one $e_{i}=\sum_{k} e_{k}$ corresponding closest to a single global third factor distributed to all neurons, (a diffuse neuromodulatory signal). For the weight updates implementation read section 4.4.2 of the Superspike paper.
+\subsubsection{Multi-Layer Training and Limitations}
+The form \ref{eqn:integratedsuperspike} requires an extension to hidden layers. The same learning rule for hidden units can be used, with the modification that that $e_{i}(t)$ becomes a complicated function which depends on the weights and future activity of all downstream neurons. This non-locality in space and time presents serious problems, both in terms of biological plausibility and technical feasibility. Technically, this computation requires either backpropagation through time through the PSP kernel or the computation of all relevant quantities online as in the case of RTRL.
+\subsubsection{Conclusion}
+The authors suggest that instead of only one global feedback signal, a higher dimensional neuromodulatory or electrical feedback signal for learning potentially with some knowledge of the feedforward pathway is needed. We suggest that oscillations can serve this purpose of intelligent neuromodulation .The brain employs a method of compartmentalizing calculations, which may allow it to perform more complex and difficult tasks, but it also necessitates the need of central control to integrate data from various brain areas. Long-range neuromodulator projection divergence appears to be well-suited to coordinating communication between brain areas. Neural transmission is characterized by oscillatory brain activity. Thus, neuromodulators' ability to modify signal transmission in a frequency-dependent way provides a deeper degree of control.
+
+\subsection{Synaptic Plasticity Dynamics for Deep Continuous Local Learning (Decolle)}
+Synaptic Plasticity Dynamics for Deep Continuous Local Learning \cite{kaiser2020} allows for online learning by employing local error functions. This property makes this learning rule appropriate for neuromorphic hardware since it doesn't require any memory overhead. Synaptic plasticity rules are obtained systematically from user-defined cost functions and neuronal dynamics using machine learning frameworks' current auto differentiation algorithms. Back Propagation Through Time (BPTT) is not biologically realistic because neurons make their computations locally. Also, the continuous-time dynamics of SNNs raise a temporal credit assignment problem.
+\subsubsection{How it works}
+Decolle can compute gradients locally by using layerwise local readouts \cite{neftci2017}. The temporal dynamics are handled by the established equivalence of SNNs and recurrent ANNs as mentioned in the Surrogate Gradient Learning section \cite{neftci2019}. The plasticity rule is temporally localized because Decolle is written in such a way that the information needed to compute the gradient is carried forward. This idea is not entirely new, but similar methods require dedicated state variables for every synapse, thus scaling at least quadratically with the number of neurons, such as the SuperSpike with local learning rules . Decolle scales linearly with the number of neurons, which requires orders of magnitude less memory. Using readouts, a temporally and spatially local cost function. The authors point out the resemblance with readout mechanisms used in Liquid State Machines \cite{markram2002}. Readout neurons in liquid state machines can learn to extract information from certain microcircuits and report this information to other circuits.Readouts in Decolle are performed over a fixed random combination of neuron outputs. The authors also consider it a type of synthetic gradient with random initialization of the local readout.
+\subsubsection{Advantages of Decolle over previous methods}
+Decolle, like SuperSpike, uses surrogate gradients to update weights, but unlike SuperSpike, the cost function is local in time and space, requiring only one trace per input neuron. This allows the method to scale in space linearly. Furthermore, the computation of the gradients in Decolle can reuse the variables computed for the forward dynamics, resulting in no additional memory burden during learning. Decolle's local readout functions as a decoder layer and learns the internal weights with the readout weights being random and fixed. Internal weights training allows the network to learn representations that make it easier for succeeding layers to classify inputs \cite{neftci2017} . This is somewhat similar to reservoir networks but the readout weights are trainable, Decolle avoids this to reduce computation costs while still managing to achieve great classification accuracy. A Reservoir-based Convolutional Spiking Neural Network has been used to train a Dynamic Vision Dataset with great accuracy \cite{george2020}. We point out again  that SNNs are recurrent even when all the connections are feed-forward because the neurons maintain a state that is propagated forward at every time step. Because the full sequence and resulting activity states are stored to compute gradients, BPTT-based techniques can compute gradients gradients well, but at a cost in memory. Additionally, in SNNs we have to use a very large number of timesteps to capture the temporal dynamics of the input (a simulation time of 1ms or less is advised). This obviously means we have to use a large truncation window depending on the frequency of salient events in the input data(1000 timesteps if these occur every 1s).The size of SNN trainable by BPTT is severely limited by the available GPU memory  \cite{ochard2018} . This fact is confirmed by us too, as will be explained in later sections. Without reducing the dimensionality of the input dataset(DVS Gestures) and without local learning rules , the network required thousands of GBs of GPU memory.  Decolle requires an order T less memory resources compared to BPTT, where T is the sequence length.
+
+\subsubsection{Neuron and Synapse Model}
+The neuron and synapse models used in Decolle's paper experiments follow leaky, current-based integrate-and-fire dynamics with a relative refractory mechanism. We have defined this neuron model previously, but we define it again to allow us to explain easily the equations used for learning.The behavior the membrane potential $U_{i}$ of a neuron $i$ is described by the following differential equations:
+\begin{equation}
+\begin{aligned}
+U_{i}(t) &=V_{i}(t)-\rho R_{i}(t)+b_{i} \\
+\tau_{m e m} \frac{\mathrm{d}}{\mathrm{d} t} V_{i}(t) &=-V_{i}(t)+I_{i}(t) \\
+\tau_{r e f} \frac{\mathrm{d}}{\mathrm{d} t} R_{i}(t) &=-R_{i}(t)+S_{i}(t)
+\end{aligned}
+\end{equation}
+
+$S_{i}(t)$ has a binary value $(0$ or 1$)$ representing whether neuron $i$ spiked at time $t$ . The membrane potential is separated into two variables U and V is biologically inspired and represents a two compartment model, one dendritic (V) and one somatic (U) compartment .When the membrane potential reaches a threshold a spike is generated 
+$S_{i}(t)=\Theta\left(U_{i}(t)\right)$, where $\Theta(x)=0$ if $x<0$, otherwise 1 is the unit step function. The constant $b_{i}$ represents the intrinsic excitability of the neuron. The refractory mechanism is described by $R_{i}$ .Basically the neuron inhibits itself after firing, by a constant weight $\rho$.In other words, after a neuron has emitted a spike it won't excite as easily as before but can still emit a spike given a strong enough input. This behavior is governed by the last differential equation above. Usually in Integrate-and-Fire models the neuron cannot emit a spike immediately after even with a strong input. The factors $\tau_{r e f}$ and $\tau_{m e m}$ are time constants of the membrane and refractory dynamics.$I_{i}$ describes the total synaptic current of neuron $i$, expressed as:
+\begin{equation}
+\tau_{s y n} \frac{\mathrm{d}}{\mathrm{d} t} I_{i}(t)=-I_{i}(t)+\sum_{j \in \mathrm{pre}} W_{i j} S_{j}(t)
+\end{equation}
+$W_{i j}$ are the synaptic weights between pre-synaptic neuron $j$ and post-synaptic neuron $i$. $V_{i}$ and $I_{i}$ are linear with respect to the weights $W_{i j}$, so the authors of Decolle rewrite $V_{i}$:
+
+\begin{equation}
+\begin{aligned}
+V_{i}(t) &=\sum_{j \in \text { pre }} W_{i j} P_{i j}(t) \\
+\tau_{m e m} \frac{\mathrm{d}}{\mathrm{d} t} P_{i j}(t) &=-P_{i j}(t)+Q_{i j}(t) \\
+\tau_{s y n} \frac{\mathrm{d}}{\mathrm{d} t} Q_{i j}(t) &=-Q_{i j}(t)+S_{j}(t)
+\end{aligned}
+\end{equation}
+
+
+The state $P$ describes the traces of the membrane and $Q$ describes the traces of the current-based synapsey. For each incoming spike, the trace $Q$ undergoes a jump of height 1 and otherwise decays exponentially with a time constant $\tau_{\mathrm{syn}}$. The Post-Synaptic-Potentials (PSPs) of neuron $i$ caused by input neuron $j$ emerged by the weighting of the trace $Q_{i j}$ with the synaptic weight $W_{i j}$ . $P_{i j}$ and $Q_{i j}$ are only driven by $S_{j}$, and so the index $i$ is dropped. As a result, the $P$ and $Q$ variables are as many as are pre-synaptic neurons, independently of the number of synapses. 
+However,for computer simulation we need the equations in discrete time, the simulation time step is denoted with $\Delta t$. The superscript $l$ represents the layer to which the neuron belongs. The above equations are rewritten as such:
+\begin{equation}
+\begin{aligned}
+U_{i}^{l}[t]=\sum_{j} W_{i j}^{l} p_{j}^{l}[t]-\rho R_{i}^{l}[t]+b_{i}^{l} \\
+S_{i}^{l}[t]=\Theta\left(U_{i}^{l}[t]\right) \\
+P_{j}^{l}[t+\Delta t]=\alpha P_{j}^{l}[t]+(1-\alpha) Q_{j}^{l}[t] \\
+Q_{j}^{l}[t+\Delta t]=\beta Q_{j}^{l}[t]+(1-\beta) S_{j}^{l-1}[t] \\
+R_{i}^{l}[t+\Delta t]=\gamma R_{i}^{l}[t]+(1-\gamma) S_{i}^{l}[t]
+\end{aligned}
+\end{equation}
+The constants $\alpha=\exp \left(-\frac{\Delta t}{\tau_{\text {mem }}}\right), \gamma=\exp \left(-\frac{\Delta t}{\tau_{\text {ref }}}\right)$, and $\beta=\exp \left(-\frac{\Delta t}{\tau_{s y n}}\right)$ reflect the decay dynamics of the membrane potential $U$, the refractory state $R$ and the synaptic state $Q$ during a $\Delta t$ timestep.
+\subsubsection{Deep Learning}
+A global cost function is assumed: $\mathcal{L}\left(S^{N}\right)$ . It is defined on the spikes $S^{N}$ of the top layer and targets $\hat{Y}$, the gradients with respect to the weights in layer $l$ are:
+\begin{equation}
+\frac{\partial \mathcal{L}\left(S^{N}\right)}{\partial W_{i j}^{l}}=\frac{\partial \mathcal{L}\left(S^{N}\right)}{\partial S_{i}^{l}} \frac{\partial S_{i}^{l}}{\partial U_{i}^{l}} \frac{\partial U_{i}^{l}}{\partial W_{i j}^{l}}
+\end{equation}
 
 
 
+The factor $\frac{\partial \mathcal{L}\left(S^{N}\right)}{\partial S_{i}^{l}}$ describes the backpropagated errors. The backpropagated errors represent how the output of neuron $i$ in layer $l$ modifies the global loss. This problem is known as the credit assignment problem. However, it usually involves non-local terms,the activity neurons, their errors, and how they behaved in the past. Taking into consideration the non-locality a hidden neuron cannot predict how modifying its own behavior will affect the top-layer cost. Approximations to the backpropagated errors in SNNs can allow local learning, for example in feedback alignment \cite{lillicrap2016}. However, maintaining the history of the dynamics efficiently remains a challenging and open problem. What remains an open problem is how to store the past dynamics efficiently  and this one of the main achievements of Decolle, reduced GPU memory requirement compared to using BPTT methods.
+
+Decolle focuses on a type of deep local learning in which random readouts are attached to deep layers and auxiliary cost functions are defined over the readout \ref{fig:readout}.
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{Learning Methods/decolle/READOUT.jpg}
+    \caption{Readout Mechanism . 
+    \label{fig:readout}}
+\end{figure}
+
+For neurons in the deep layers, these auxiliary cost functions provide a task-relevant source of error. By multiplying the neural activations with a random and fixed matrix, the random readout is obtained. Deep layer training with auxiliary local errors that reduce cost locally allows the network as a whole to achieve a low top layer cost. As discussed in \cite{mostafa2017}, reducing the classification loss of a local readout puts pressure on deep layers to acquire important task-relevant features, allowing the random local classifiers to accurate enough for the global loss to get reduced.  Furthermore, each layer draws on the features of the preceding layer to learn features for its local random classifier that are more disentangled with regard to the categories than the prior layer. In this article, we focus on the fact that, provided local loss functions, surrogate learning in deep spiking neural networks becomes particularly efficient. This results in an efficient surrogate learning approach for deep spiking neural networks.
+\subsection{Decolle Learning Rule}
+Τhe random readout that is attached to each of the $N$ layers of spiking neurons is given by:
+\begin{equation}
+Y_{i}^{l}=\sum_{j} G_{i j}^{l} S_{j}^{l}
+\end{equation}
+where $G_{i j}^{l}$ are fixed, random matrices (one for each layer $l$ ) and $\Theta$ is an activation function. The global loss function is then defined as the sum of the layerwise loss functions defined on the random readouts, i.e. $\mathcal{L}=\sum_{l=1}^{N} L^{l}\left(Y^{l}\right)$. To enforce locality, Decolle sets to zero all non-local gradients, i.e., $\frac{\partial L^{l}}{\partial W_{i j}^{m}}=0$ if $m \neq l$. The weight updates at each layer are:
+
+\begin{equation}
+\Delta W_{i j}^{l}=-\eta \frac{\partial L^{l}}{\partial W_{i j}^{l}}=-\eta \frac{\partial L^{l}}{\partial S_{i}^{l}} \frac{\partial S_{i}^{l}}{\partial W_{i j}^{l}}
+\end{equation}
+
+where $\eta$ is the learning rate. Assuming the loss function depends only on variables in same time step, the term $\frac{\partial L^{l}}{\partial S_{i}^{\prime}}$, can be computed using the chain rule of derivatives. Applying the chain of derivatives to the second gradient term yields:
+\begin{equation}
+\frac{\partial S_{i}^{l}}{\partial W_{i j}^{l}}=\frac{\partial \Theta\left(U_{i}^{l}\right)}{\partial U_{i}^{l}} \frac{\partial U_{i}^{l}}{\partial W_{i j}^{l}}
+\end{equation}
+Due to the sparse, binary activation of spiking neurons, this expression vanishes everywhere except at 0 , where it is infinite . To solve this problem Decolle uses surrogate gradient-based learning:
+\begin{equation}
+\frac{\partial S_{i}^{l}}{\partial W_{i j}^{l}}=\sigma^{\prime}\left(U_{i}^{l}\right) \frac{\partial U_{i}^{l}}{\partial W_{i j}^{l}}
+\end{equation}
+where $\sigma^{\prime}\left(U_{i}^{l}\right)$ is the surrogate gradient of the non-differentiable step function $\Theta\left(U_{i}^{l}\right)$.
+\begin{equation}
+\frac{\partial U_{i}^{l}}{\partial W_{i j}^{l}}=P_{j}^{l}-\rho \frac{\partial R_{i}^{l}}{\partial W_{i j}^{l}}
+\end{equation}
+The terms involving $R_{i}^{l}$ are difficult to calculate because they depend on the spiking history of the neuron. As in Superspike,  terms involving $R_{i}^{l}$ are ignored. Regularization is applied to favor low firing rates, this causes the term $R_{i}^{l}$ to have negligible effect. The Decolle rule that describes how the synaptic weights are updated is:
+\begin{equation}
+\Delta W_{i j}^{l}=-\eta \frac{\partial L^{l}}{\partial S_{i}^{l}} \sigma^{\prime}\left(U_{i}^{l}\right) P_{j}^{l}
+\end{equation}
+In the case of the Mean Square Error (MSE) loss for layer $l$, described as:
+\begin{equation}
+L^{l}=\frac{1}{2} \sum_{i}\left(Y_{i}^{l}-\hat{Y}_{i}^{l}\right)^{2}
+\end{equation}
+the Decolle rule becomes:
+\begin{equation}
+\begin{aligned}
+\Delta W_{i j}^{l} &=-\eta \operatorname{error}_{i}^{l} \sigma^{\prime}\left(U_{i}^{l}\right) P_{j}^{l} \\
+\operatorname{error}_{i}^{l} &=\sum_{k} G_{k i}^{l}\left(Y_{k}^{l}-\hat{Y}_{k}^{l}\right)
+\end{aligned}
+\end{equation}
+where $\hat{Y}^{l}$ is the pseudo-target vector for layer $l$.
+\begin{equation}
+\mathcal{L}_{g}=\sum_{l} L^{l}+\lambda_{1}\left\langle\left[U_{i}^{l}+0.01\right]^{+}\right\rangle_{i}+\lambda_{2}\left[0.1-\left\langle U_{i}^{l}\right\rangle_{i}\right]^{+}
+\end{equation}
+\subsubsection{Computational Complexity}
+The variables P and U required for learning are local and available from the forward dynamics. Because the errors are computed locally to each layer, DECOLLE does not need to store any additional intermediate variables.  The computational cost of the weight update is one addition and two products per connection. This makes DECOLLE significantly cheaper to implement compared to BPTT for training SNNs which scales spatially as O(NT),T is the number of timesteps. Decolle employs auto-differentiation tools; all that is required is backpropagation across a subgraph corresponding to one layer in the same time step. Because the information needed to compute the gradients is carried forward in time and local loss functions provide the gradients needed for each layer. Exact implementation details of auto differentiation is given in Decolle's paper footnotes.
+
+
+
+\subsection{e-Prop - A solution to the learning dilemma for recurrent networks of spiking neurons}
+
+\chapter{Dynamic Vision Sensors}
+
+\begin{wrapfigure}{r}{0.25\textwidth} %this figure will be at the right
+    \centering
+     \includegraphics[width=0.25\textwidth]{DVS/sensor.PNG}
+    \caption{iniLabs Dynamic Vision Sensor Architecture}
+    \label{fig:dvs-sensor}
+\end{wrapfigure}
+
+Dynamic Vision Sensors or Event cameras are bio-inspired sensors that operate in a somewhat different way than conventional cameras. They calculate per-pixel brightness changes asynchronously rather than collecting images at a fixed time. Dynamic vision sensors provide great advantages when compared to standard cameras. These include higher temporal resolution , very high dynamic range (140 dB compared to 60 dB). Also, they consume much less power, and they provide high pixel bandwidth which results in lower motion blur.  These advantages over standard cameras can help robotics which require low-latency, high-speed, efficient cameras to function well and efficiently. DVS have also the potential to reduce training cost of Computer Vision deep neural networks while offering equal or better performance.However, because event cameras differ from ordinary cameras in that they measure per-pixel brightness variations (called "events") asynchronously rather than recording "absolute" brightness at a fixed rate, new methods are needed to analyze their output .
+
+\subsubsection{Applications}
+
+\begin{itemize}
+    \item Object Tracking
+    \item Surveillance and monitoring
+    \item Object/Gesture recognition
+    \item depth estimation
+    \item structured light 3D scanning
+    \item optical flow estimation 
+    \item HDR image reconstruction
+    \item Simultaneous Localization and Mapping field of research
+    \item Image Deblurring
+\end{itemize}
+\subsubsection{Event Cameras operating principles}
+How exactly do Event Cameras calculate per-pixel brightness changes? Each output event or spike represents a change of brightness(log intensity) depended on a threshold, at a particular time. Each pixel has to remember its own log intensity every time it "spikes" and is ready to send out an event again if a certain change in brightness is perceived. This is different to traditional cameras where information about the environment is recorded in frames per second(in cycles) instead of continuously monitoring the environment. An output event contains the \textit{x,y}  location, time \textit{t} and the 1-bit polarity \textit{p} ( brightness increase "ON" or decrease "OFF, see also \ref{fig:dvs-overview}b,\ref{fig:dvs-overview}e,\ref{fig:dvs-overview}f \ref{davis}).
+
+\begin{wrapfigure}{r}{0.5\textwidth} %this figure will be at the right
+    \centering
+     \includegraphics[width=0.5\textwidth]{DVS/dvs-overview.PNG}
+    \caption{DAVIS camera}
+    \label{fig:dvs-overview}
+\end{wrapfigure}
+
+The events are exported from the camera using a shared digital output bus, usually by using address-event readout(AER) \cite{boahen2004} \cite{liu2015} . The amount of data-points generated by those sensors depends on the amount of information that changes in time, in the environment. This is achieved by adapting the sampling rate to the rate of change of the log intensity signal. The time resolution is in the order of microseconds while latency is a little slower in the order of sub-milliseconds. This allows sensors to react quickly to visual stimuli and makes the sensors appropriate for autonomous driving. Additionally, the DVS brightness change events have a built-in invariance to scene illumination.
+to scene illumination [2].
+\subsubsection{Event Sensors Devices}
+Apart from the original DVS event camera \cite{Lichtsteiner2008} there have been recent advancements \cite{posch2014} , \cite{liu2015}, \cite{indiveri2015}, \cite{delbruck2010} .
+One of the most widely used sensors is the Dynamic and Active Pixel Vision Sensor \cite{davis} \ref{fig:dvs-sensor}.DAVIS combines a conventional active pixel sensor (APS) \cite{fossum1997} in the same pixel with DVS.   
+\subsubsection{Challenges}
+\begin{itemize}
+    \item Dealing with various space-time output: Event cameras' output differs significantly from conventional cameras: events are asynchronous and spatially sparse, whereas pictures are synchronous and dense. As a result, frame-based vision algorithms do not apply.
+    \item Each event contains information about how brightness changes. However, brightness changes are not only related to current scene brightness but on current and past relative motion between the scene and the camera.
+    \item Noise: Because of the intrinsic shot noise in photons and transistor circuit noise, all vision sensors are noisy.
+\end{itemize}
+\subsubsection{Event Generation}
+An event sensor \cite{Lichtsteiner2008} has independent pixels that respond
+to changes in their log photocurrent \textit{L=log(I)} . An event \(e\textsubscript{k}=(x\textsubscript{k},t\textsubscript{k},p\textsubscript{k}\) is triggered at pixel \(x\textsubscript{k}=(x\textsubscript{k},y\textsubscript{k})^T\) at time \textit{t}\textsubscript{k} when the brightness increases a certain temporal contrast threshold \textit{C} since the last event.
+
+\begin{equation}
+    \Delta L(x\textsubscript{k},t\textsubscript{k}) = L(x\textsubscript{k},t\textsubscript{k})-(x\textsubscript{k},t\textsubscript{k}-\Delta t\textsubscript{k})
+\end{equation}
+\begin{equation}
+   \Delta L(x\textsubscript{k},t\textsubscript{k}) = p\textsubscript{k}C 
+\end{equation}
+Where \(C > 0, \Delta t\textsubscript{k}\) is the time elapse since the last event at the same pixel, and the polarity  \(p\textsubscript{k} \in {+1,-1}\) is the sign of the brightness change \cite{Lichtsteiner2008}. The contrast sensitivity \textit{C} is determined by the pixel bias currents \cite{nozaki2017} \cite{Gallego2020}, which also set the speed and threshold of the change detector in \ref{fig:dvs-overview}. Typical DVS's thresholds are set 10-50 percent of illumination change. More advanced methods of generating events exist but is not the subject of this dissertation. Some of these methods include setting a threshold on magnitude of the brightness change since the last event happened and are used as a basis of physically grounded event based algorithms \cite{Gallego2019}. Events can also be set to be generated by moving edges. More complex models include taking into account sensor noise and transistor mismatch making these models probabilistic. 
+
+\subsection{Event Processing}
+Event processing aims to extract useful information from the data, but is also depended on the type of task we are interested in. Approaches for event processing that work on an event-by-event basis, with the state of the system (estimated unknowns) changing with each arrival of a single event, resulting in the shortest possible latency do not provide enough information for estimation and so methods that operate on events in groups or packets are more appropriate.These however, result in some increased latency but still provide a state update on event arrival. Given that events are processed in an optimized framework, another distinction is the type of objective or loss function used: geometric vs. temporal vs. photometric (e.g., a function of event polarity or activity).
+
+\subsubsection{Event Representation Methods}
+These methods can be considered as the pre-processing step before the data is inserted into the desired neural network. The choice however is also influenced by the type of neural network that is used.
+\begin{figure}[htp] %this figure will be at the right
+    \centering
+     \includegraphics[width=16cm]{DVS/representation-methods.PNG}
+    \caption{Event representations}
+    \label{fig:representation-methods}
+\end{figure}
+
+
+(a) Events in space time(positive polarity is in blue color while negative polarity is in red).
+
+(b) Events are accumulated in a 2-D image .This allows conventional computer vision algorithms to be applied. However, this method defeats our purpose of recording events in the time dimension, we are losing valuable information
+
+(c) Time surface is a 2D map where each pixel stores a single time value. This is called Motion History Images in computer vision \cite{ahad2012} .One example \cite{lagorge2017} events can be converted into an image that represents the recent motion history exposing the rich temporal information of the recorded data. Their effectiveness is degraded on textured scenes.
+
+(d) Similar concept of (c) but now the 3rd dimension allows to store the whole sequence of events(only negative events are shown in the figure).
+
+(e) Motion-Compensated event image \cite{Gallego2019} .A representation that is based on both events and motion hypotheses. The theory behind motion compensation is that as an edge moves over the image plane, it generates events on the pixels it passes through; the edge's motion may be calculated by warping the events to a reference time and optimizing their alignment, resulting in a sharp image (i.e., histogram) of warped events. This is mostly useful if someone wants to tracks features in a video.
+
+(f) Reconstructed image intensity \cite{rebecq2019}.
+
+
+\subsubsection{Dataset Choice}
+https://www.neuromorphic-vision.com/public/downloads/navgesture/
+\chapter{Experiments}
 \bibliographystyle{IEEEtran}
 \bibliography{library}
 \end{document}
